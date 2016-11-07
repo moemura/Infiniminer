@@ -1,0 +1,6 @@
+C:\Users\hp\Source\Repos\infiniminer\code\InfiniminerServer\obj\Debug\InfiniminerServer.csprojResolveAssemblyReference.cache
+C:\Users\hp\Source\Repos\infiniminer\bin\InfiniminerServer.exe.config
+C:\Users\hp\Source\Repos\infiniminer\bin\InfiniminerServer.exe
+C:\Users\hp\Source\Repos\infiniminer\bin\InfiniminerServer.pdb
+C:\Users\hp\Source\Repos\infiniminer\code\InfiniminerServer\obj\Debug\InfiniminerServer.exe
+C:\Users\hp\Source\Repos\infiniminer\code\InfiniminerServer\obj\Debug\InfiniminerServer.pdb

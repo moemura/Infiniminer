@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices; 
+using System.Runtime.InteropServices;
 using System.Reflection;
 using Infiniminer;
 using Microsoft.Xna.Framework;
@@ -12,13 +12,14 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using Plexiglass.Client.States;
 
 namespace StateMasher
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class StateMachine : Microsoft.Xna.Framework.Game
+    public class StateMachine : Microsoft.Xna.Framework.Game, IStateMachine
     {
         [DllImport("user32.dll")]
         public static extern int GetForegroundWindow(); 
@@ -42,6 +43,8 @@ namespace StateMasher
             get { return frameRate; }
         }
 
+        public Plexiglass.Client.IClientManager plexiglassInstance = null;
+
         //private Dictionary<Keys, bool> keysDown = new Dictionary<Keys, bool>();
         private MouseState msOld;
 
@@ -55,7 +58,7 @@ namespace StateMasher
             EventInput.EventInput.KeyUp += new EventInput.KeyEventHandler(EventInput_KeyUp);
         }
 
-        protected void ChangeState(string newState)
+        public void ChangeState(string newState)
         {
             // Call OnLeave for the old state.
             if (currentState != null)
@@ -65,6 +68,8 @@ namespace StateMasher
             Assembly a = Assembly.GetExecutingAssembly();
             Type t = a.GetType(newState);
             currentState = Activator.CreateInstance(t) as State;
+
+            currentState.PrecacheContent();
 
             // Set up the new state.
             currentState._P = propertyBag;
@@ -115,7 +120,7 @@ namespace StateMasher
         protected override void Update(GameTime gameTime)
         {
             if (frameCount > 0)
-                frameRate = frameCount / gameTime.TotalRealTime.TotalSeconds;
+                frameRate = frameCount / gameTime.TotalGameTime.TotalSeconds;
 
             if (currentState != null && propertyBag != null)
             {
@@ -168,6 +173,13 @@ namespace StateMasher
             }
             
             base.Draw(gameTime);
+        }
+
+        /// ========================= BEGIN PLEXIGLASS FUNCTIONS ========================= \\\
+
+        public T LoadContent<T>(string assetName)
+        {
+            return plexiglassInstance.GetContentManager().LoadAndStore<T>(Content, assetName);
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Infiniminer
 {
     public class Defines
     {
-        public const string INFINIMINER_VERSION = "v1.5";
+        public const string INFINIMINER_VERSION = "v. Amazing Anteater";
         public const int GROUND_LEVEL = 8;
 
         /*public const string deathByLava = "HAD AN UNFORTUNATE SMELTING ACCIDENT!";

@@ -10,19 +10,19 @@ struct PixelToFrame
 };
 
 //------- XNA-to-HLSL variables --------
-float4x4 xView;
-float4x4 xProjection;
-float4x4 xWorld;
-float xTime;
+uniform extern float4x4 xView : VIEW;
+uniform extern float4x4 xWorld : WORLD;
+uniform extern float4x4 xProjection : PROJECTION;
+uniform extern float xTime;
+uniform extern Texture xTexture;
 
 //------- Texture Samplers --------
 
-Texture xTexture;
-sampler NoiseSampler = sampler_state {
-	texture = <xTexture>;
-	magfilter = POINT;
-	minfilter = ANISOTROPIC;
-	mipfilter = NONE;
+sampler2D NoiseSampler = sampler_state {
+	Texture = <xTexture>;
+	MagFilter = POINT;
+	MinFilter = ANISOTROPIC;
+	MipFilter = NONE;
 	AddressU = WRAP;
 	AddressV = WRAP;
 };
@@ -63,7 +63,7 @@ technique Skyplane
 {
 	pass Pass0
 	{   
-		VertexShader = compile vs_2_0 TexturedVS();
-		PixelShader  = compile ps_2_0 TexturedPS();
+		VertexShader = compile vs_3_0 TexturedVS();
+		PixelShader  = compile ps_3_0 TexturedPS();
 	}
 }

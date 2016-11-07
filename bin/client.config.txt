@@ -2,7 +2,7 @@
 handle = Player
 
 width = 1024
-height = 780
+height = 700
 fullscreen = false
 
 # If this flag is set to true, pretty mode will be enabled, which turns on bloom lighting!

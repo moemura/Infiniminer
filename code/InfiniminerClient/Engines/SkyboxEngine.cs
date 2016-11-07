@@ -10,10 +10,11 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using Plexiglass.Client.Engine;
 
 namespace Infiniminer
 {
-    public class SkyplaneEngine
+    public class SkyplaneEngine : IEngine
     {
         InfiniminerGame gameInstance;
         PropertyBag _P;
@@ -21,7 +22,6 @@ namespace Infiniminer
         Random randGen;
         VertexPositionTexture[] vertices;
         Effect effect;
-        VertexDeclaration vertexDeclaration;
         float effectTime = 0;
 
         public SkyplaneEngine(InfiniminerGame gameInstance)
@@ -40,10 +40,9 @@ namespace Infiniminer
             texNoise.SetData(noiseData);
 
             // Load the effect file.
-            effect = gameInstance.Content.Load<Effect>("effect_skyplane");
+            effect = gameInstance.LoadContent<Effect>("effect_skyplane");
 
             // Create our vertices.
-            vertexDeclaration = new VertexDeclaration(gameInstance.GraphicsDevice, VertexPositionTexture.VertexElements);
             vertices = new VertexPositionTexture[6];
             vertices[0] = new VertexPositionTexture(new Vector3(-210, 100, -210), new Vector2(0, 0));
             vertices[1] = new VertexPositionTexture(new Vector3(274, 100, -210), new Vector2(1, 0));
@@ -66,8 +65,8 @@ namespace Infiniminer
                 _P = gameInstance.propertyBag;
 
             // Draw the skybox.
-            Matrix viewMatrix = _P.playerCamera.ViewMatrix;
-            Matrix projectionMatrix = _P.playerCamera.ProjectionMatrix;
+            Matrix viewMatrix = _P.PlayerContainer.playerCamera.ViewMatrix;
+            Matrix projectionMatrix = _P.PlayerContainer.playerCamera.ProjectionMatrix;
 
             effect.CurrentTechnique = effect.Techniques["Skyplane"];
             effect.Parameters["xWorld"].SetValue(Matrix.Identity);
@@ -75,19 +74,14 @@ namespace Infiniminer
             effect.Parameters["xProjection"].SetValue(projectionMatrix);
             effect.Parameters["xTexture"].SetValue(texNoise);
             effect.Parameters["xTime"].SetValue(effectTime);
-            effect.Begin();
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
-                pass.Begin();
-                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
-                graphicsDevice.RenderState.CullMode = CullMode.None;
-                graphicsDevice.RenderState.DepthBufferEnable = false;
-                graphicsDevice.VertexDeclaration = vertexDeclaration;
+                pass.Apply();
+                graphicsDevice.RasterizerState = RasterizerState.CullNone;
+                graphicsDevice.DepthStencilState = DepthStencilState.None;
                 graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
-                graphicsDevice.RenderState.DepthBufferEnable = true;
-                pass.End();
+                graphicsDevice.DepthStencilState = DepthStencilState.Default;
             }
-            effect.End();
         }
     }
 }

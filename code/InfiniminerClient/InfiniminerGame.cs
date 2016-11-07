@@ -13,23 +13,19 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using Lidgren.Network;
-using Lidgren.Network.Xna;
+using InfiniminerShared;
+using System.Text;
+using Plexiglass.Client;
 
 namespace Infiniminer
 {
     public class InfiniminerGame : StateMasher.StateMachine
     {
         double timeSinceLastUpdate = 0;
-        string playerHandle = "Player";
-        float volumeLevel = 1.0f;
-        NetBuffer msgBuffer = null;
+
+        NetIncomingMessage msgBuffer;
         Song songTitle = null;
 
-        public bool RenderPretty = true;
-        public bool DrawFrameRate = false;
-        public bool InvertMouseYAxis = false;
-        public bool NoSound = false;
-        public float mouseSensitivity = 0.005f;
         public bool customColours = false;
         public Color red=Defines.IM_RED;
         public string redName = "Red";
@@ -53,37 +49,36 @@ namespace Infiniminer
         {
             anyPacketsReceived = false;
             // Clear out the map load progress indicator.
-            propertyBag.mapLoadProgress = new bool[64,64];
+            propertyBag.MapLoadProgress = new bool[64,64];
             for (int i = 0; i < 64; i++)
                 for (int j=0; j<64; j++)
-                    propertyBag.mapLoadProgress[i,j] = false;
+                    propertyBag.MapLoadProgress[i,j] = false;
 
             // Create our connect message.
-            NetBuffer connectBuffer = propertyBag.netClient.CreateBuffer();
-            connectBuffer.Write(propertyBag.playerHandle);
+            NetOutgoingMessage connectBuffer = propertyBag.netClient.CreateMessage();
+            connectBuffer.Write(propertyBag.PlayerContainer.playerHandle);
             connectBuffer.Write(Defines.INFINIMINER_VERSION);
 
             //Compression - will be ignored by regular servers
             connectBuffer.Write(true);
 
             // Connect to the server.
-            propertyBag.netClient.Connect(serverEndPoint, connectBuffer.ToArray());
+            propertyBag.netClient.Connect(serverEndPoint, connectBuffer);
         }
 
         public List<ServerInformation> EnumerateServers(float discoveryTime)
         {
             List<ServerInformation> serverList = new List<ServerInformation>();
-            
+
             // Discover local servers.
-            propertyBag.netClient.DiscoverLocalServers(5565);
-            NetBuffer msgBuffer = propertyBag.netClient.CreateBuffer();
-            NetMessageType msgType;
+            propertyBag.netClient.DiscoverLocalPeers(5565);
+            NetIncomingMessage msgBuffer;
             float timeTaken = 0;
             while (timeTaken < discoveryTime)
             {
-                while (propertyBag.netClient.ReadMessage(msgBuffer, out msgType))
+                while ((msgBuffer = propertyBag.netClient.ReadMessage()) != null)
                 {
-                    if (msgType == NetMessageType.ServerDiscovered)
+                    if (msgBuffer.MessageType == NetIncomingMessageType.DiscoveryResponse)
                     {
                         bool serverFound = false;
                         ServerInformation serverInfo = new ServerInformation(msgBuffer);
@@ -136,46 +131,45 @@ namespace Infiniminer
             }
 
             // Recieve messages from the server.
-            NetMessageType msgType;
-            while (propertyBag.netClient.ReadMessage(msgBuffer, out msgType))
+            while ((msgBuffer = propertyBag.netClient.ReadMessage()) != null)
             {
-                switch (msgType)
+                switch (msgBuffer.MessageType)
                 {
-                    case NetMessageType.StatusChanged:
+                    case NetIncomingMessageType.StatusChanged:
                         {
-                            if (propertyBag.netClient.Status == NetConnectionStatus.Disconnected)
-                                ChangeState("Infiniminer.States.ServerBrowserState");
-                        }
-                        break;
-                    case NetMessageType.ConnectionApproval:
-                        anyPacketsReceived = true;
-                        break;
-                    case NetMessageType.ConnectionRejected:
-                        {
-                            anyPacketsReceived = false;
-                            try
+                            if(propertyBag.netClient.ConnectionStatus == NetConnectionStatus.RespondedConnect)
                             {
-                                string[] reason = msgBuffer.ReadString().Split(";".ToCharArray());
-                                if (reason.Length < 2 || reason[0] == "VER")
-                                    System.Windows.Forms.MessageBox.Show("Error: client/server version incompability!\r\nServer: " + msgBuffer.ReadString() + "\r\nClient: " + Defines.INFINIMINER_VERSION);
-                                else
-                                    System.Windows.Forms.MessageBox.Show("Error: you are banned from this server!");
+                                anyPacketsReceived = true;
                             }
-                            catch { }
-                            ChangeState("Infiniminer.States.ServerBrowserState");
+                            if (propertyBag.netClient.ConnectionStatus == NetConnectionStatus.Disconnected)
+                            {
+                                anyPacketsReceived = false;
+                                try
+                                {
+                                    string[] reason = msgBuffer.ReadString().Split(";".ToCharArray());
+                                    if (reason.Length < 2 || reason[0] == "VER")
+                                        System.Windows.Forms.MessageBox.Show("Error: client/server version incompability!\r\nServer: " + msgBuffer.ReadString() + "\r\nClient: " + Defines.INFINIMINER_VERSION);
+                                    else
+                                        System.Windows.Forms.MessageBox.Show("Error: you are banned from this server!");
+                                }
+                                catch { }
+                                ChangeState("Infiniminer.States.ServerBrowserState");
+                            }
                         }
-                        break;
-
-                    case NetMessageType.Data:
+                        break;        
+                    case NetIncomingMessageType.Data:
                         {
                             try
                             {
                                 InfiniminerMessage dataType = (InfiniminerMessage)msgBuffer.ReadByte();
                                 switch (dataType)
                                 {
+                                    // TODO: Replace this entire switch statement with a call to the packet registry
                                     case InfiniminerMessage.BlockBulkTransfer:
                                         {
                                             anyPacketsReceived = true;
+
+                                            BlockEngine blockEngine = propertyBag.GetEngine<BlockEngine>("blockEngine");
 
                                             try
                                             {
@@ -187,7 +181,7 @@ namespace Infiniminer
                                                 //255 was used because it exceeds the map size - of course, bytes won't work anyway if map sizes are allowed to be this big, so this method is a non-issue
                                                 if (isCompressed == 255)
                                                 {
-                                                    var compressed = msgBuffer.ReadBytes(msgBuffer.LengthBytes - msgBuffer.Position / 8);
+                                                    var compressed = msgBuffer.ReadBytes(msgBuffer.LengthBytes - (int)(msgBuffer.Position / 8));
                                                     var compressedstream = new System.IO.MemoryStream(compressed);
                                                     var decompresser = new System.IO.Compression.GZipStream(compressedstream, System.IO.Compression.CompressionMode.Decompress);
 
@@ -199,7 +193,7 @@ namespace Infiniminer
                                                         {
                                                             BlockType blockType = (BlockType)decompresser.ReadByte();
                                                             if (blockType != BlockType.None)
-                                                                propertyBag.blockEngine.downloadList[x, y + dy, z] = blockType;
+                                                                blockEngine.downloadList[x, y + dy, z] = blockType;
                                                         }
                                                 }
                                                 else
@@ -212,7 +206,7 @@ namespace Infiniminer
                                                         {
                                                             BlockType blockType = (BlockType)msgBuffer.ReadByte();
                                                             if (blockType != BlockType.None)
-                                                                propertyBag.blockEngine.downloadList[x, y + dy, z] = blockType;
+                                                                blockEngine.downloadList[x, y + dy, z] = blockType;
                                                         }
                                                 }
                                                 bool downloadComplete = true;
@@ -228,7 +222,7 @@ namespace Infiniminer
                                                     ChangeState("Infiniminer.States.TeamSelectionState");
                                                     if (!NoSound)
                                                         MediaPlayer.Stop();
-                                                    propertyBag.blockEngine.DownloadComplete();
+                                                    blockEngine.DownloadComplete();
                                                 }
                                             }
                                             catch (Exception e)
@@ -249,23 +243,23 @@ namespace Infiniminer
 
                                             if (text == "")
                                             {
-                                                if (propertyBag.beaconList.ContainsKey(position))
-                                                    propertyBag.beaconList.Remove(position);
+                                                if (propertyBag.BeaconList.ContainsKey(position))
+                                                    propertyBag.BeaconList.Remove(position);
                                             }
                                             else
                                             {
                                                 Beacon newBeacon = new Beacon();
                                                 newBeacon.ID = text;
                                                 newBeacon.Team = team;
-                                                propertyBag.beaconList.Add(position, newBeacon);
+                                                propertyBag.BeaconList.Add(position, newBeacon);
                                             }
                                         }
                                         break;
 
                                     case InfiniminerMessage.TriggerConstructionGunAnimation:
                                         {
-                                            propertyBag.constructionGunAnimation = msgBuffer.ReadFloat();
-                                            if (propertyBag.constructionGunAnimation <= -0.1)
+                                            propertyBag.PlayerContainer.constructionGunAnimation = msgBuffer.ReadFloat();
+                                            if (propertyBag.PlayerContainer.constructionGunAnimation <= -0.1)
                                                 propertyBag.PlaySound(InfiniminerSound.RadarSwitch);
                                         }
                                         break;
@@ -273,11 +267,11 @@ namespace Infiniminer
                                     case InfiniminerMessage.ResourceUpdate:
                                         {
                                             // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
-                                            propertyBag.playerOre = msgBuffer.ReadUInt32();
-                                            propertyBag.playerCash = msgBuffer.ReadUInt32();
-                                            propertyBag.playerWeight = msgBuffer.ReadUInt32();
-                                            propertyBag.playerOreMax = msgBuffer.ReadUInt32();
-                                            propertyBag.playerWeightMax = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.playerOre = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.playerCash = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.playerWeight = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.playerOreMax = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.playerWeightMax = msgBuffer.ReadUInt32();
                                             propertyBag.teamOre = msgBuffer.ReadUInt32();
                                             propertyBag.teamRedCash = msgBuffer.ReadUInt32();
                                             propertyBag.teamBlueCash = msgBuffer.ReadUInt32();
@@ -286,6 +280,7 @@ namespace Infiniminer
 
                                     case InfiniminerMessage.BlockSet:
                                         {
+                                            BlockEngine blockEngine = propertyBag.GetEngine<BlockEngine>("blockEngine");
                                             // x, y, z, type, all bytes
                                             byte x = msgBuffer.ReadByte();
                                             byte y = msgBuffer.ReadByte();
@@ -293,14 +288,14 @@ namespace Infiniminer
                                             BlockType blockType = (BlockType)msgBuffer.ReadByte();
                                             if (blockType == BlockType.None)
                                             {
-                                                if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
-                                                    propertyBag.blockEngine.RemoveBlock(x, y, z);
+                                                if (blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
+                                                    blockEngine.RemoveBlock(x, y, z);
                                             }
                                             else
                                             {
-                                                if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
-                                                    propertyBag.blockEngine.RemoveBlock(x, y, z);
-                                                propertyBag.blockEngine.AddBlock(x, y, z, blockType);
+                                                if (blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
+                                                    blockEngine.RemoveBlock(x, y, z);
+                                                blockEngine.AddBlock(x, y, z, blockType);
                                                 CheckForStandingInLava();
                                             }
                                         }
@@ -314,10 +309,10 @@ namespace Infiniminer
                                             propertyBag.PlaySound(InfiniminerSound.Explosion, blockPos);
 
                                             // Create some particles.
-                                            propertyBag.particleEngine.CreateExplosionDebris(blockPos);
+                                            propertyBag.GetEngine<ParticleEngine>("particleEngine").CreateExplosionDebris(blockPos);
 
                                             // Figure out what the effect is.
-                                            float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.playerPosition).Length();
+                                            float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.PlayerContainer.playerPosition).Length();
                                             if (distFromExplosive < 3)
                                                 propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
                                             else if (distFromExplosive < 8)
@@ -359,7 +354,7 @@ namespace Infiniminer
                                             propertyBag.playerList[playerId].redTeam = red;
                                             propertyBag.playerList[playerId].blueTeam = blue;
                                             if (thisIsMe)
-                                                propertyBag.playerMyId = playerId;
+                                                propertyBag.PlayerContainer.playerMyId = playerId;
                                         }
                                         break;
 
@@ -373,13 +368,14 @@ namespace Infiniminer
 
                                     case InfiniminerMessage.PlayerDead:
                                         {
+
                                             uint playerId = msgBuffer.ReadUInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.Alive = false;
-                                                propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
-                                                if (playerId != propertyBag.playerMyId)
+                                                propertyBag.GetEngine<ParticleEngine>("particleEngine").CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
+                                                if (playerId != propertyBag.PlayerContainer.playerMyId)
                                                     propertyBag.PlaySound(InfiniminerSound.Death, player.Position);
                                             }
                                         }
@@ -431,7 +427,7 @@ namespace Infiniminer
                                             uint playerId = (uint)msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
-                                                if (propertyBag.playerList[playerId].Team == propertyBag.playerTeam)
+                                                if (propertyBag.playerList[playerId].Team == propertyBag.PlayerContainer.playerTeam)
                                                 {
                                                     propertyBag.playerList[playerId].Ping = 1;
                                                     propertyBag.PlaySound(InfiniminerSound.Ping);
@@ -469,12 +465,14 @@ namespace Infiniminer
         {
             // Copied from TryToMoveTo; responsible for checking if lava has flowed over us.
 
-            Vector3 movePosition = propertyBag.playerPosition;
+            BlockEngine blockEngine = propertyBag.GetEngine<BlockEngine>("blockEngine");
+
+            Vector3 movePosition = propertyBag.PlayerContainer.playerPosition;
             Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
             Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
-            BlockType lowerBlock = propertyBag.blockEngine.BlockAtPoint(lowerBodyPoint);
-            BlockType midBlock = propertyBag.blockEngine.BlockAtPoint(midBodyPoint);
-            BlockType upperBlock = propertyBag.blockEngine.BlockAtPoint(movePosition);
+            BlockType lowerBlock = blockEngine.BlockAtPoint(lowerBodyPoint);
+            BlockType midBlock = blockEngine.BlockAtPoint(midBodyPoint);
+            BlockType upperBlock = blockEngine.BlockAtPoint(movePosition);
             if (upperBlock == BlockType.Lava || lowerBlock == BlockType.Lava || midBlock == BlockType.Lava)
             {
                 propertyBag.KillPlayer(Defines.deathByLava);
@@ -615,21 +613,24 @@ namespace Infiniminer
                 propertyBag.netClient.Shutdown("");
 
             propertyBag = new Infiniminer.PropertyBag(this);
-            propertyBag.playerHandle = playerHandle;
-            propertyBag.volumeLevel = volumeLevel;
-            propertyBag.mouseSensitivity = mouseSensitivity;
+            propertyBag.SettingsContainer.playerHandle = playerHandle;
+            propertyBag.SettingsContainer.volumeLevel = volumeLevel;
+            propertyBag.SettingsContainer.mouseSensitivity = mouseSensitivity;
             propertyBag.keyBinds = keyBinds;
             propertyBag.blue = blue;
             propertyBag.red = red;
             propertyBag.blueName = blueName;
             propertyBag.redName = redName;
-            msgBuffer = propertyBag.netClient.CreateBuffer();
+            msgBuffer = null;
         }
 
         protected override void LoadContent()
         {
             // Initialize the property bag.
             ResetPropertyBag();
+
+            // Make sure to initialize our brand spanking new PlexiglassClientManager.
+            InitializePlexiglassInstance();
 
             // Set the initial state to team selection
             ChangeState("Infiniminer.States.TitleState");
@@ -639,8 +640,17 @@ namespace Infiniminer
             {
                 songTitle = Content.Load<Song>("song_title");
                 MediaPlayer.Play(songTitle);
-                MediaPlayer.Volume = propertyBag.volumeLevel;
+                MediaPlayer.Volume = propertyBag.SettingsContainer.volumeLevel;
             }
+        }
+
+        /// ========================= BEGIN PLEXIGLASS FUNCTIONS ========================= \\\
+        
+        protected void InitializePlexiglassInstance()
+        {
+            plexiglassInstance = new PlexiglassClientManager();
+            plexiglassInstance.InitializeContentManager();
+            plexiglassInstance.InitializePacketRegistry(this.propertyBag, this);
         }
     }
 }

@@ -12,14 +12,15 @@ struct PixelToFrame
 };
 
 //------- XNA-to-HLSL variables --------
-float4x4 xView;
-float4x4 xProjection;
-float4x4 xWorld;
-float3	 xLODColor;
-float	 xTime;
+uniform extern float4x4 xView : VIEW;
+uniform extern float4x4 xWorld : WORLD;
+uniform extern float4x4 xProjection : PROJECTION;
+uniform extern float3 xLODColor;
+uniform extern float xTime;
+
+uniform extern Texture xTexture;
 
 //------- Texture Samplers --------
-Texture xTexture;
 sampler TextureSampler = sampler_state
 {
 	texture = <xTexture>;

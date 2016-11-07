@@ -21,11 +21,15 @@ namespace Infiniminer.States
         Rectangle drawRect;
         string nextState = null;
 
+        /// ====== PLEXIGLASS VARIABLES ======= \\\
+        SpriteFont uiFont;
+
         public override void OnEnter(string oldState)
         {
             _SM.IsMouseVisible = true;
 
-            texMenu = _SM.Content.Load<Texture2D>("menus/tex_menu_title");
+            texMenu = _SM.LoadContent<Texture2D>("menus/tex_menu_title");
+            uiFont = _SM.LoadContent<SpriteFont>("font_04b08");
 
             drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
@@ -54,8 +58,9 @@ namespace Infiniminer.States
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             spriteBatch.Draw(texMenu, drawRect, Color.White);
+            spriteBatch.DrawString(uiFont, "[PLEXIGLASS EDITION]", new Vector2(_SM.GraphicsDevice.Viewport.Width-500, _SM.GraphicsDevice.Viewport.Height - 50), Color.White);
             spriteBatch.End();
         }
 

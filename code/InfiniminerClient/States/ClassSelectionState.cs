@@ -22,6 +22,11 @@ namespace Infiniminer.States
         Rectangle drawRect;
         string nextState = null;
 
+        SkyplaneEngine skyplaneEngine = null;
+        PlayerEngine playerEngine = null;
+        InterfaceEngine interfaceEngine = null;
+        ParticleEngine particleEngine = null;
+
         ClickRegion[] clkClassMenu = new ClickRegion[4] {
 	        new ClickRegion(new Rectangle(54,168,142,190), "miner"), 
 	        new ClickRegion(new Rectangle(300,169,142,190), "prospector"), 
@@ -34,8 +39,10 @@ namespace Infiniminer.States
         {
             _SM.IsMouseVisible = true;
 
-            texMenuRed = _SM.Content.Load<Texture2D>("menus/tex_menu_class_red");
-            texMenuBlue = _SM.Content.Load<Texture2D>("menus/tex_menu_class_blue");
+            skyplaneEngine = _P.GetEngine<SkyplaneEngine>("skyplaneEngine");
+            playerEngine = _P.GetEngine<PlayerEngine>("playerEngine");
+            interfaceEngine = _P.GetEngine<InterfaceEngine>("interfaceEngine");
+            particleEngine = _P.GetEngine<ParticleEngine>("particleEngine");
 
             drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
@@ -55,10 +62,10 @@ namespace Infiniminer.States
             // Do network stuff.
             (_SM as InfiniminerGame).UpdateNetwork(gameTime);
 
-            _P.skyplaneEngine.Update(gameTime);
-            _P.playerEngine.Update(gameTime);
-            _P.interfaceEngine.Update(gameTime);
-            _P.particleEngine.Update(gameTime);
+            skyplaneEngine.Update(gameTime);
+            playerEngine.Update(gameTime);
+            interfaceEngine.Update(gameTime);
+            particleEngine.Update(gameTime);
 
             return nextState;
         }
@@ -71,8 +78,8 @@ namespace Infiniminer.States
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-            spriteBatch.Draw((_P.playerTeam == PlayerTeam.Red)?texMenuRed:texMenuBlue, drawRect, Color.White);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            spriteBatch.Draw((_P.PlayerContainer.playerTeam == PlayerTeam.Red)?texMenuRed:texMenuBlue, drawRect, Color.White);
             spriteBatch.End();
         }
 
@@ -127,6 +134,14 @@ namespace Infiniminer.States
         public override void OnMouseScroll(int scrollDelta)
         {
 
+        }
+
+        //====================== BEGIN PLEXIGLASS FUNCTIONS ============================\\
+
+        public override void PrecacheContent()
+        {
+            texMenuRed = _SM.LoadContent<Texture2D>("menus/tex_menu_class_red");
+            texMenuBlue = _SM.LoadContent<Texture2D>("menus/tex_menu_class_blue");
         }
     }
 }

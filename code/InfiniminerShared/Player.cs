@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Lidgren.Network;
-using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -204,7 +203,7 @@ namespace Infiniminer
             this.ID = Player.GetUniqueId();
 
             if (netConn != null)
-                this.IP = netConn.RemoteEndpoint.Address.ToString();
+                this.IP = netConn.RemoteEndPoint.Address.ToString();
 
             if (gameInstance != null)
             {

@@ -3,10 +3,11 @@ using System.Runtime.InteropServices;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Plexiglass.Client.States;
 
 namespace EventInput
 {
-    public class CharacterEventArgs : EventArgs
+    public class CharacterEventArgs : EventArgs, ICharacterEventArgs
     {
         private readonly char character;
         private readonly int lParam;

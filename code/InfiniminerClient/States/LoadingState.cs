@@ -50,14 +50,10 @@ namespace Infiniminer.States
         {
             _SM.IsMouseVisible = false;
 
-            texMenu = _SM.Content.Load<Texture2D>("menus/tex_menu_loading");
-
             drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
                                      1024,
                                      1024);
-
-            uiFont = _SM.Content.Load<SpriteFont>("font_04b08");
 
             // Pick a random hint.
             Random randGen = new Random();
@@ -94,7 +90,7 @@ namespace Infiniminer.States
                 progressText = String.Format("{0:00}% LOADED", dataPacketsRecieved / 256.0f * 100);
 
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             spriteBatch.Draw(texMenu, drawRect, Color.White);
             spriteBatch.DrawString(uiFont, progressText, new Vector2(((int)(_SM.GraphicsDevice.Viewport.Width / 2 - uiFont.MeasureString(progressText).X / 2)), drawRect.Y + 430), Color.White);
             for (int i=0; i<currentHint.Length; i++)
@@ -106,7 +102,7 @@ namespace Infiniminer.States
         {
             if (key == Keys.Escape)
             {
-                _P.netClient.Disconnect("Client disconnected.");
+                _P.NetClient.Disconnect("Client disconnected.");
                 nextState = "Infiniminer.States.ServerBrowserState";
             }
         }
@@ -129,6 +125,12 @@ namespace Infiniminer.States
         public override void OnMouseScroll(int scrollDelta)
         {
 
+        }
+
+        public override void PrecacheContent()
+        {
+            uiFont = _SM.LoadContent<SpriteFont>("font_04b08");
+            texMenu = _SM.LoadContent<Texture2D>("menus/tex_menu_loading");
         }
     }
 }

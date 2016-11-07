@@ -12,13 +12,15 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using Infiniminer;
+using Plexiglass.Client.States;
+using Plexiglass.Client;
 
 namespace StateMasher
 {
-    public class State
+    public class State : IState
     {
-        public StateMachine _SM = null;
-        public Infiniminer.PropertyBag _P = null;
+        public IStateMachine _SM { get; set; }
+        public IPropertyBag _P { get; set; }
 
         public virtual void OnEnter(string oldState)
         {
@@ -41,7 +43,7 @@ namespace StateMasher
         {
         }
 
-        public virtual void OnCharEntered(EventInput.CharacterEventArgs e)
+        public virtual void OnCharEntered(ICharacterEventArgs e)
         {
         }
 
@@ -62,6 +64,12 @@ namespace StateMasher
         }
 
         public virtual void OnMouseScroll(int scrollWheelValue)
+        {
+        }
+
+        //===================== BEGIN PLEXIGLASS METHODS ======================\\
+
+        public virtual void PrecacheContent()
         {
         }
 

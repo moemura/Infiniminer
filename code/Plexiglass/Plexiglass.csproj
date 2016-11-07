@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8AB294AD-C7A5-446A-BC89-BA9A91B58F99}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Plexiglass</RootNamespace>
+    <AssemblyName>Plexiglass</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Chat\IChatMessage.cs" />
+    <Compile Include="Client\ChatContainer.cs" />
+    <Compile Include="Client\Engine\IBlockEngine.cs" />
+    <Compile Include="Client\Engine\IEngine.cs" />
+    <Compile Include="Client\Engine\IParticleEngine.cs" />
+    <Compile Include="Client\ICamera.cs" />
+    <Compile Include="Client\IPropertyBag.cs" />
+    <Compile Include="Client\PlayerContainer.cs" />
+    <Compile Include="Client\SettingsContainer.cs" />
+    <Compile Include="Client\States\IState.cs" />
+    <Compile Include="Client\States\IStateMachine.cs" />
+    <Compile Include="Client\States\ResourceLoadingState.cs" />
+    <Compile Include="Client\States\ICharacterEventArgs.cs" />
+    <Compile Include="Client\TeamContainer.cs" />
+    <Compile Include="Exceptions\DuplicateKeyException.cs" />
+    <Compile Include="Client\Content\IContentManager.cs" />
+    <Compile Include="Client\Content\PlexiglassContentManager.cs" />
+    <Compile Include="Client\IClientManager.cs" />
+    <Compile Include="Client\PlexiglassClientManager.cs" />
+    <Compile Include="Networking\Handlers\PacketBlockBulkTransferHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketBlockSetHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPingHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPlayerJoinedHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPlayerSetTeamHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketResourceUpdateHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketSetBeaconHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketTriggerAnimationHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketTriggerExplosionHandler.cs" />
+    <Compile Include="Networking\IPacket.cs" />
+    <Compile Include="Networking\IPacketHandler.cs" />
+    <Compile Include="Networking\IPacketRegistry.cs" />
+    <Compile Include="Networking\PacketSerializationTools.cs" />
+    <Compile Include="Networking\Packets\PacketBlockBulkTransfer.cs" />
+    <Compile Include="Networking\Packets\PacketBlockSet.cs" />
+    <Compile Include="Networking\Packets\PacketPlayerJoined.cs" />
+    <Compile Include="Networking\Packets\PacketPlayerSetTeam.cs" />
+    <Compile Include="Networking\Packets\PacketResourceUpdate.cs" />
+    <Compile Include="Networking\Packets\PacketSetBeacon.cs" />
+    <Compile Include="Networking\Packets\PacketTriggerAnimation.cs" />
+    <Compile Include="Networking\Packets\PacketTriggerExplosion.cs" />
+    <Compile Include="Networking\PlexiglassPacketRegistry.cs" />
+    <Compile Include="Networking\Packets\PacketPing.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Server\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InfiniminerShared\InfiniminerShared.csproj">
+      <Project>{CC122120-E018-43DA-B92D-EC368AA0CFF5}</Project>
+      <Name>InfiniminerShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

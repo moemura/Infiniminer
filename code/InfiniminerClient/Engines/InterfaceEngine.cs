@@ -11,10 +11,11 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using Plexiglass.Client.Engine;
 
 namespace Infiniminer
 {
-    public class InterfaceEngine
+    public class InterfaceEngine : IEngine
     {
         InfiniminerGame gameInstance;
         PropertyBag _P;
@@ -36,35 +37,35 @@ namespace Infiniminer
             spriteBatch = new SpriteBatch(gameInstance.GraphicsDevice);
 
             // Load textures.
-            texCrosshairs = gameInstance.Content.Load<Texture2D>("ui/tex_ui_crosshair");
+            texCrosshairs = gameInstance.LoadContent<Texture2D>("ui/tex_ui_crosshair");
             texBlank = new Texture2D(gameInstance.GraphicsDevice, 1, 1);
             texBlank.SetData(new uint[1] { 0xFFFFFFFF });
-            texRadarBackground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_background");
-            texRadarForeground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_foreground");
-            texRadarPlayerSame = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_same");
-            texRadarPlayerAbove = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_above");
-            texRadarPlayerBelow = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_below");
-            texRadarPlayerPing = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_ping");
-            texRadarNorth = gameInstance.Content.Load<Texture2D>("ui/tex_radar_north");
-            texHelp = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help");
+            texRadarBackground = gameInstance.LoadContent<Texture2D>("ui/tex_radar_background");
+            texRadarForeground = gameInstance.LoadContent<Texture2D>("ui/tex_radar_foreground");
+            texRadarPlayerSame = gameInstance.LoadContent<Texture2D>("ui/tex_radar_player_same");
+            texRadarPlayerAbove = gameInstance.LoadContent<Texture2D>("ui/tex_radar_player_above");
+            texRadarPlayerBelow = gameInstance.LoadContent<Texture2D>("ui/tex_radar_player_below");
+            texRadarPlayerPing = gameInstance.LoadContent<Texture2D>("ui/tex_radar_player_ping");
+            texRadarNorth = gameInstance.LoadContent<Texture2D>("ui/tex_radar_north");
+            texHelp = gameInstance.LoadContent<Texture2D>("menus/tex_menu_help");
 
-            texToolRadarRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_red");
-            texToolRadarBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_blue");
-            texToolRadarGold = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_gold");
-            texToolRadarDiamond = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_diamond");
-            texToolRadarLED = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_led");
-            texToolRadarPointer = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_pointer");
-            texToolRadarFlash = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_flash");
+            texToolRadarRed = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_red");
+            texToolRadarBlue = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_blue");
+            texToolRadarGold = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_screen_gold");
+            texToolRadarDiamond = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_screen_diamond");
+            texToolRadarLED = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_led");
+            texToolRadarPointer = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_pointer");
+            texToolRadarFlash = gameInstance.LoadContent<Texture2D>("tools/tex_tool_radar_flash");
 
-            texToolBuild = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build");
-            texToolBuildCharge = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_charge");
-            texToolBuildBlast = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_blast");
-            texToolBuildSmoke = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_smoke");
+            texToolBuild = gameInstance.LoadContent<Texture2D>("tools/tex_tool_build");
+            texToolBuildCharge = gameInstance.LoadContent<Texture2D>("tools/tex_tool_build_charge");
+            texToolBuildBlast = gameInstance.LoadContent<Texture2D>("tools/tex_tool_build_blast");
+            texToolBuildSmoke = gameInstance.LoadContent<Texture2D>("tools/tex_tool_build_smoke");
 
-            texToolDetonatorDownRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_red");
-            texToolDetonatorUpRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_red");
-            texToolDetonatorDownBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_blue");
-            texToolDetonatorUpBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_blue");
+            texToolDetonatorDownRed = gameInstance.LoadContent<Texture2D>("tools/tex_tool_detonator_down_red");
+            texToolDetonatorUpRed = gameInstance.LoadContent<Texture2D>("tools/tex_tool_detonator_up_red");
+            texToolDetonatorDownBlue = gameInstance.LoadContent<Texture2D>("tools/tex_tool_detonator_down_blue");
+            texToolDetonatorUpBlue = gameInstance.LoadContent<Texture2D>("tools/tex_tool_detonator_up_blue");
 
             drawRect = new Rectangle(gameInstance.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      gameInstance.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
@@ -72,24 +73,24 @@ namespace Infiniminer
                                      1024);
 
             // Load icons.
-            blockIcons[BlockType.BankBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_bank_blue");
-            blockIcons[BlockType.BankRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_bank_red");
-            blockIcons[BlockType.Explosive] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_explosive");
-            blockIcons[BlockType.Jump] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_jump");
-            blockIcons[BlockType.Ladder] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_ladder");
-            blockIcons[BlockType.SolidBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_solid_blue");
-            blockIcons[BlockType.SolidRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_solid_red");
-            blockIcons[BlockType.Shock] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_spikes");
-            blockIcons[BlockType.TransBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_translucent_blue");
-            blockIcons[BlockType.TransRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_translucent_red");
-            blockIcons[BlockType.BeaconRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
-            blockIcons[BlockType.BeaconBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
-            blockIcons[BlockType.Road] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_road");
-            blockIcons[BlockType.None] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
+            blockIcons[BlockType.BankBlue] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_bank_blue");
+            blockIcons[BlockType.BankRed] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_bank_red");
+            blockIcons[BlockType.Explosive] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_explosive");
+            blockIcons[BlockType.Jump] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_jump");
+            blockIcons[BlockType.Ladder] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_ladder");
+            blockIcons[BlockType.SolidBlue] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_solid_blue");
+            blockIcons[BlockType.SolidRed] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_solid_red");
+            blockIcons[BlockType.Shock] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_spikes");
+            blockIcons[BlockType.TransBlue] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_translucent_blue");
+            blockIcons[BlockType.TransRed] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_translucent_red");
+            blockIcons[BlockType.BeaconRed] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_beacon");
+            blockIcons[BlockType.BeaconBlue] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_beacon");
+            blockIcons[BlockType.Road] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_road");
+            blockIcons[BlockType.None] = gameInstance.LoadContent<Texture2D>("icons/tex_icon_deconstruction");
 
             // Load fonts.
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
-            radarFont = gameInstance.Content.Load<SpriteFont>("font_04b03b");
+            uiFont = gameInstance.LoadContent<SpriteFont>("font_04b08");
+            radarFont = gameInstance.LoadContent<SpriteFont>("font_04b03b");
         }
 
         public void RenderMessageCenter(SpriteBatch spriteBatch, string text, Vector2 pointCenter, Color colorText, Color colorBackground)
@@ -117,29 +118,29 @@ namespace Infiniminer
             if (_P.chatFullBuffer.Count > bufferSize)
                 _P.chatFullBuffer.RemoveRange(bufferSize, _P.chatFullBuffer.Count - bufferSize);
 
-            if (_P.constructionGunAnimation > 0)
+            if (_P.PlayerContainer.constructionGunAnimation > 0)
             {
-                if (_P.constructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
-                    _P.constructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_P.PlayerContainer.constructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
+                    _P.PlayerContainer.constructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 else
-                    _P.constructionGunAnimation = 0;
+                    _P.PlayerContainer.constructionGunAnimation = 0;
             }
             else
             {
-                if (_P.constructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
-                    _P.constructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_P.PlayerContainer.constructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
+                    _P.PlayerContainer.constructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 else
-                    _P.constructionGunAnimation = 0;
+                    _P.PlayerContainer.constructionGunAnimation = 0;
             }
         }
 
         public void RenderRadarBlip(SpriteBatch spriteBatch, Vector3 position, Color color, bool ping, string text)
         {
             // Figure out the relative position for the radar blip.
-            Vector3 relativePosition = position - _P.playerPosition;
+            Vector3 relativePosition = position - _P.PlayerContainer.playerPosition;
             float relativeAltitude = relativePosition.Y;
             relativePosition.Y = 0;
-            Matrix rotationMatrix = Matrix.CreateRotationY(-_P.playerCamera.Yaw);
+            Matrix rotationMatrix = Matrix.CreateRotationY(-_P.PlayerContainer.playerCamera.Yaw);
             relativePosition = Vector3.Transform(relativePosition, rotationMatrix) * 10;
             float relativeLength = Math.Min(relativePosition.Length(), 93);
             if (relativeLength != 0)
@@ -188,13 +189,12 @@ namespace Infiniminer
         {
             int screenWidth = graphicsDevice.Viewport.Width;
             int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
 
             Texture2D textureToUse;
             if (Mouse.GetState().LeftButton == ButtonState.Pressed || Mouse.GetState().MiddleButton == ButtonState.Pressed || Mouse.GetState().RightButton == ButtonState.Pressed)
-                textureToUse = _P.playerTeam == PlayerTeam.Red ? texToolDetonatorDownRed : texToolDetonatorDownBlue;
+                textureToUse = _P.PlayerContainer.playerTeam == PlayerTeam.Red ? texToolDetonatorDownRed : texToolDetonatorDownBlue;
             else
-                textureToUse = _P.playerTeam == PlayerTeam.Red ? texToolDetonatorUpRed : texToolDetonatorUpBlue;
+                textureToUse = _P.PlayerContainer.playerTeam == PlayerTeam.Red ? texToolDetonatorUpRed : texToolDetonatorUpBlue;
 
             spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
         }
@@ -203,24 +203,23 @@ namespace Infiniminer
         {
             int screenWidth = graphicsDevice.Viewport.Width;
             int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
 
             int drawX = screenWidth / 2 - 32 * 3;
             int drawY = screenHeight - 102 * 3;
 
-            spriteBatch.Draw(_P.playerTeam == PlayerTeam.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
+            spriteBatch.Draw(_P.PlayerContainer.playerTeam == PlayerTeam.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
 
-            if (_P.radarValue > 0)
+            if (_P.PlayerContainer.radarValue > 0)
                 spriteBatch.Draw(texToolRadarLED, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.radarValue == 200)
+            if (_P.PlayerContainer.radarValue == 200)
                 spriteBatch.Draw(texToolRadarGold, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.radarValue == 1000)
+            if (_P.PlayerContainer.radarValue == 1000)
                 spriteBatch.Draw(texToolRadarDiamond, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.playerToolCooldown > 0.2f)
+            if (_P.PlayerContainer.playerToolCooldown > 0.2f)
                 spriteBatch.Draw(texToolRadarFlash, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
 
-            int pointerOffset = (int)(30 - _P.radarDistance) / 2;  // ranges from 0 to 15 inclusive
-            if (_P.radarDistance == 30)
+            int pointerOffset = (int)(30 - _P.PlayerContainer.radarDistance) / 2;  // ranges from 0 to 15 inclusive
+            if (_P.PlayerContainer.radarDistance == 30)
                 pointerOffset = 15;
             spriteBatch.Draw(texToolRadarPointer, new Rectangle(drawX + 54 * 3, drawY + 20 * 3 + pointerOffset * 3, 4 * 3, 5 * 3), Color.White);
         }
@@ -229,17 +228,16 @@ namespace Infiniminer
         {
             int screenWidth = graphicsDevice.Viewport.Width;
             int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
 
             int drawX = screenWidth / 2 - 60 * 3;
             int drawY = screenHeight - 91 * 3;
 
             Texture2D gunSprite = texToolBuild;
-            if (_P.constructionGunAnimation < -0.001)
+            if (_P.PlayerContainer.constructionGunAnimation < -0.001)
                 gunSprite = texToolBuildCharge;
-            else if (_P.constructionGunAnimation > 0.3)
+            else if (_P.PlayerContainer.constructionGunAnimation > 0.3)
                 gunSprite = texToolBuildBlast;
-            else if (_P.constructionGunAnimation > 0.001)
+            else if (_P.PlayerContainer.constructionGunAnimation > 0.001)
                 gunSprite = texToolBuildSmoke;
             spriteBatch.Draw(gunSprite, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
             spriteBatch.Draw(blockIcons[blockType], new Rectangle(drawX + 37 * 3, drawY + 50 * 3, 117, 63), Color.White);
@@ -274,8 +272,7 @@ namespace Infiniminer
                 _P = gameInstance.propertyBag;
 
             // Draw the UI.
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
-
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             // Draw the crosshair.
             spriteBatch.Draw(texCrosshairs, new Rectangle(graphicsDevice.Viewport.Width / 2 - texCrosshairs.Width / 2,
                                                             graphicsDevice.Viewport.Height / 2 - texCrosshairs.Height / 2,
@@ -283,7 +280,7 @@ namespace Infiniminer
                                                             texCrosshairs.Height), Color.White);
 
             // If equipped, draw the tool.
-            switch (_P.playerTools[_P.playerToolSelected])
+            switch (_P.PlayerContainer.playerTools[_P.PlayerContainer.playerToolSelected])
             {
                 case PlayerTools.Detonator:
                     RenderDetonator(graphicsDevice, spriteBatch);
@@ -294,7 +291,7 @@ namespace Infiniminer
                     break;
 
                 case PlayerTools.ConstructionGun:
-                    RenderConstructionGun(graphicsDevice, spriteBatch, _P.playerBlocks[_P.playerBlockSelected]);
+                    RenderConstructionGun(graphicsDevice, spriteBatch, _P.PlayerContainer.playerBlocks[_P.PlayerContainer.playerBlockSelected]);
                     break;
 
                 case PlayerTools.DeconstructionGun:
@@ -304,8 +301,8 @@ namespace Infiniminer
                 default:
                     {
                         // Draw info about what we have equipped.
-                        PlayerTools currentTool = _P.playerTools[_P.playerToolSelected];
-                        BlockType currentBlock = _P.playerBlocks[_P.playerBlockSelected];
+                        PlayerTools currentTool = _P.PlayerContainer.playerTools[_P.PlayerContainer.playerToolSelected];
+                        BlockType currentBlock = _P.PlayerContainer.playerBlocks[_P.PlayerContainer.playerBlockSelected];
                         string equipment = currentTool.ToString();
                         if (currentTool == PlayerTools.ConstructionGun)
                             equipment += " - " + currentBlock.ToString() + " (" + BlockInformation.GetCost(currentBlock) + ")";
@@ -318,7 +315,7 @@ namespace Infiniminer
                 RenderMessageCenter(spriteBatch, String.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
 
             // Show the altimeter.
-            int altitude = (int)(_P.playerPosition.Y - 64 + Defines.GROUND_LEVEL);
+            int altitude = (int)(_P.PlayerContainer.playerPosition.Y - 64 + Defines.GROUND_LEVEL);
             RenderMessageCenter(spriteBatch, String.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Defines.IM_RED, Color.Black);
 
             // Draw bank instructions.
@@ -332,9 +329,9 @@ namespace Infiniminer
             // Draw the text-based information panel.
             int textStart = (graphicsDevice.Viewport.Width - 1024) / 2;
             spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
-            spriteBatch.DrawString(uiFont, "ORE: " + _P.playerOre + "/" + _P.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "LOOT: $" + _P.playerCash, new Vector2(textStart + 170, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.playerWeight + "/" + _P.playerWeightMax, new Vector2(textStart + 340, 2), Color.White);
+            spriteBatch.DrawString(uiFont, "ORE: " + _P.PlayerContainer.playerOre + "/" + _P.PlayerContainer.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
+            spriteBatch.DrawString(uiFont, "LOOT: $" + _P.PlayerContainer.playerCash, new Vector2(textStart + 170, 2), Color.White);
+            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.PlayerContainer.playerWeight + "/" + _P.PlayerContainer.playerWeightMax, new Vector2(textStart + 340, 2), Color.White);
             spriteBatch.DrawString(uiFont, "TEAM ORE: " + _P.teamOre, new Vector2(textStart + 515, 2), Color.White);
             spriteBatch.DrawString(uiFont, _P.redName + ": $" + _P.teamRedCash, new Vector2(textStart + 700, 2), _P.red);// Defines.IM_RED);
             spriteBatch.DrawString(uiFont, _P.blueName + ": $" + _P.teamBlueCash, new Vector2(textStart + 860, 2), _P.blue);// Defines.IM_BLUE);
@@ -342,10 +339,10 @@ namespace Infiniminer
             // Draw player information.
             if ((Keyboard.GetState().IsKeyDown(Keys.Tab) && _P.screenEffect == ScreenEffect.None) || _P.teamWinners != PlayerTeam.None)
             {
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(Color.Black, 0.7f));
+                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(0f, 0f, 0f, 0.7f));
 
                 //Server name
-                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), _P.playerTeam == PlayerTeam.Blue ? _P.blue : _P.red, Color.Black);//Defines.IM_BLUE : Defines.IM_RED, Color.Black);
+                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), _P.PlayerContainer.playerTeam == PlayerTeam.Blue ? _P.blue : _P.red, Color.Black);//Defines.IM_BLUE : Defines.IM_RED, Color.Black);
                 
                 if (_P.teamWinners != PlayerTeam.None)
                 {
@@ -404,10 +401,10 @@ namespace Infiniminer
             // Draw the player radar.
             spriteBatch.Draw(texRadarBackground, new Vector2(10, 30), Color.White);
             foreach (Player p in _P.playerList.Values)
-                if (p.Team == _P.playerTeam && p.Alive)
-                    RenderRadarBlip(spriteBatch, p.ID == _P.playerMyId ? _P.playerPosition : p.Position, p.Team == PlayerTeam.Red ? _P.red : _P.blue, p.Ping > 0, ""); //Defines.IM_RED : Defines.IM_BLUE, p.Ping > 0, "");
+                if (p.Team == _P.PlayerContainer.playerTeam && p.Alive)
+                    RenderRadarBlip(spriteBatch, p.ID == _P.PlayerContainer.playerMyId ? _P.PlayerContainer.playerPosition : p.Position, p.Team == PlayerTeam.Red ? _P.red : _P.blue, p.Ping > 0, ""); //Defines.IM_RED : Defines.IM_BLUE, p.Ping > 0, "");
             foreach (KeyValuePair<Vector3, Beacon> bPair in _P.beaconList)
-                if (bPair.Value.Team == _P.playerTeam)
+                if (bPair.Value.Team == _P.PlayerContainer.playerTeam)
                     RenderRadarBlip(spriteBatch, bPair.Key, Color.White, false, bPair.Value.ID);
             RenderRadarBlip(spriteBatch, new Vector3(100000, 0, 32), Color.White, false, "NORTH");
 

@@ -2,15 +2,17 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Plexiglass.Client;
 
 namespace Infiniminer
 {
-    public class Camera
+    public class Camera : ICamera
     {
-        public float Pitch, Yaw;
-        public Vector3 Position;
-        public Matrix ViewMatrix = Matrix.Identity;
-        public Matrix ProjectionMatrix = Matrix.Identity;
+        public float Pitch { get; set; }
+        public float Yaw { get; set; }
+        public Vector3 Position { get; set; }
+        public Matrix ViewMatrix { get; set; }
+        public Matrix ProjectionMatrix { get; set; }
 
         public Camera(GraphicsDevice device)
         {
