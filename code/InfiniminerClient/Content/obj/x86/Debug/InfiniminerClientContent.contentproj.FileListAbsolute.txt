@@ -1,1 +1,2 @@
 C:\Users\hp\Source\Repos\infiniminer\code\InfiniminerClient\Content\obj\x86\Debug\InfiniminerClientContent.contentprojResolveAssemblyReference.cache
+C:\Users\Ethan\Documents\Programming\infiniminer\code\InfiniminerClient\Content\obj\x86\Debug\InfiniminerClientContent.contentprojResolveAssemblyReference.cache

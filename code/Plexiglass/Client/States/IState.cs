@@ -2,17 +2,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Client.States
 {
     public interface IState
     {
-        IStateMachine _SM { get; set; }
-        IPropertyBag _P { get; set; }
+        IStateMachine Sm { get; set; }
+        IPropertyBag P { get; set; }
 
         void OnEnter(string oldState);
         void OnLeave(string newState);

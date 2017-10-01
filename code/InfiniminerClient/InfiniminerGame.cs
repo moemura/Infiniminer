@@ -56,7 +56,7 @@ namespace Infiniminer
 
             // Create our connect message.
             NetOutgoingMessage connectBuffer = propertyBag.netClient.CreateMessage();
-            connectBuffer.Write(propertyBag.PlayerContainer.playerHandle);
+            connectBuffer.Write(propertyBag.PlayerContainer.PlayerHandle);
             connectBuffer.Write(Defines.INFINIMINER_VERSION);
 
             //Compression - will be ignored by regular servers
@@ -258,8 +258,8 @@ namespace Infiniminer
 
                                     case InfiniminerMessage.TriggerConstructionGunAnimation:
                                         {
-                                            propertyBag.PlayerContainer.constructionGunAnimation = msgBuffer.ReadFloat();
-                                            if (propertyBag.PlayerContainer.constructionGunAnimation <= -0.1)
+                                            propertyBag.PlayerContainer.ConstructionGunAnimation = msgBuffer.ReadFloat();
+                                            if (propertyBag.PlayerContainer.ConstructionGunAnimation <= -0.1)
                                                 propertyBag.PlaySound(InfiniminerSound.RadarSwitch);
                                         }
                                         break;
@@ -267,11 +267,11 @@ namespace Infiniminer
                                     case InfiniminerMessage.ResourceUpdate:
                                         {
                                             // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
-                                            propertyBag.PlayerContainer.playerOre = msgBuffer.ReadUInt32();
-                                            propertyBag.PlayerContainer.playerCash = msgBuffer.ReadUInt32();
-                                            propertyBag.PlayerContainer.playerWeight = msgBuffer.ReadUInt32();
-                                            propertyBag.PlayerContainer.playerOreMax = msgBuffer.ReadUInt32();
-                                            propertyBag.PlayerContainer.playerWeightMax = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.PlayerOre = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.PlayerCash = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.PlayerWeight = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.PlayerOreMax = msgBuffer.ReadUInt32();
+                                            propertyBag.PlayerContainer.PlayerWeightMax = msgBuffer.ReadUInt32();
                                             propertyBag.teamOre = msgBuffer.ReadUInt32();
                                             propertyBag.teamRedCash = msgBuffer.ReadUInt32();
                                             propertyBag.teamBlueCash = msgBuffer.ReadUInt32();
@@ -312,7 +312,7 @@ namespace Infiniminer
                                             propertyBag.GetEngine<ParticleEngine>("particleEngine").CreateExplosionDebris(blockPos);
 
                                             // Figure out what the effect is.
-                                            float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.PlayerContainer.playerPosition).Length();
+                                            float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.PlayerContainer.PlayerPosition).Length();
                                             if (distFromExplosive < 3)
                                                 propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
                                             else if (distFromExplosive < 8)
@@ -354,7 +354,7 @@ namespace Infiniminer
                                             propertyBag.playerList[playerId].redTeam = red;
                                             propertyBag.playerList[playerId].blueTeam = blue;
                                             if (thisIsMe)
-                                                propertyBag.PlayerContainer.playerMyId = playerId;
+                                                propertyBag.PlayerContainer.PlayerMyId = playerId;
                                         }
                                         break;
 
@@ -375,7 +375,7 @@ namespace Infiniminer
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.Alive = false;
                                                 propertyBag.GetEngine<ParticleEngine>("particleEngine").CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
-                                                if (playerId != propertyBag.PlayerContainer.playerMyId)
+                                                if (playerId != propertyBag.PlayerContainer.PlayerMyId)
                                                     propertyBag.PlaySound(InfiniminerSound.Death, player.Position);
                                             }
                                         }
@@ -427,7 +427,7 @@ namespace Infiniminer
                                             uint playerId = (uint)msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
-                                                if (propertyBag.playerList[playerId].Team == propertyBag.PlayerContainer.playerTeam)
+                                                if (propertyBag.playerList[playerId].Team == propertyBag.PlayerContainer.PlayerTeam)
                                                 {
                                                     propertyBag.playerList[playerId].Ping = 1;
                                                     propertyBag.PlaySound(InfiniminerSound.Ping);
@@ -467,7 +467,7 @@ namespace Infiniminer
 
             BlockEngine blockEngine = propertyBag.GetEngine<BlockEngine>("blockEngine");
 
-            Vector3 movePosition = propertyBag.PlayerContainer.playerPosition;
+            Vector3 movePosition = propertyBag.PlayerContainer.PlayerPosition;
             Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
             Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
             BlockType lowerBlock = blockEngine.BlockAtPoint(lowerBodyPoint);
@@ -613,9 +613,9 @@ namespace Infiniminer
                 propertyBag.netClient.Shutdown("");
 
             propertyBag = new Infiniminer.PropertyBag(this);
-            propertyBag.SettingsContainer.playerHandle = playerHandle;
-            propertyBag.SettingsContainer.volumeLevel = volumeLevel;
-            propertyBag.SettingsContainer.mouseSensitivity = mouseSensitivity;
+            propertyBag.SettingsContainer.PlayerHandle = playerHandle;
+            propertyBag.SettingsContainer.VolumeLevel = volumeLevel;
+            propertyBag.SettingsContainer.MouseSensitivity = mouseSensitivity;
             propertyBag.keyBinds = keyBinds;
             propertyBag.blue = blue;
             propertyBag.red = red;
@@ -640,7 +640,7 @@ namespace Infiniminer
             {
                 songTitle = Content.Load<Song>("song_title");
                 MediaPlayer.Play(songTitle);
-                MediaPlayer.Volume = propertyBag.SettingsContainer.volumeLevel;
+                MediaPlayer.Volume = propertyBag.SettingsContainer.VolumeLevel;
             }
         }
 

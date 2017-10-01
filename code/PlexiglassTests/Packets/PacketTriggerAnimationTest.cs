@@ -1,13 +1,7 @@
-﻿using Infiniminer;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Plexiglass.Networking;
 using Plexiglass.Networking.Handlers;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PlexiglassTests.Packets
 {
@@ -18,7 +12,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Registration")]
         public void PacketTriggerAnimation_RegisteringPacket_Registers()
         {
-            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT, null);
+            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT);
             packetRegistry.RegisterPacket<PacketTriggerAnimation, PacketTriggerAnimationHandler>();
         }
 
@@ -26,15 +20,14 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Serialization")]
         public void PacketTriggerAnimation_Serializing_Successful()
         {
-            var packet = new PacketTriggerAnimation();
-            packet.animationTime = 1234.56f;
+            var packet = new PacketTriggerAnimation {AnimationTime = 1234.56f};
 
             var data = packet.Serialize();
             var comp = new byte[] { 0xec, 0x51, 0x9a, 0x44 };
 
             Assert.AreEqual(comp.Length, data.Length, "Serialized data was not expected length!");
 
-            for (int i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Length; i++)
             {
                 Assert.AreEqual(comp[i], data[i]);
             }
@@ -50,7 +43,7 @@ namespace PlexiglassTests.Packets
 
             packet.Deserialize(comp);
 
-            Assert.AreEqual(1234.56f, packet.animationTime);
+            Assert.AreEqual(1234.56f, packet.AnimationTime);
         }
     }
 }

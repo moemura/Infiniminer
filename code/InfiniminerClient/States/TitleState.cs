@@ -26,13 +26,13 @@ namespace Infiniminer.States
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = true;
+            Sm.IsMouseVisible = true;
 
-            texMenu = _SM.LoadContent<Texture2D>("menus/tex_menu_title");
-            uiFont = _SM.LoadContent<SpriteFont>("font_04b08");
+            texMenu = Sm.LoadContent<Texture2D>("menus/tex_menu_title");
+            uiFont = Sm.LoadContent<SpriteFont>("font_04b08");
 
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                     _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
+            drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
+                                     Sm.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
                                      1024,
                                      1024);
         }
@@ -60,7 +60,7 @@ namespace Infiniminer.States
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             spriteBatch.Draw(texMenu, drawRect, Color.White);
-            spriteBatch.DrawString(uiFont, "[PLEXIGLASS EDITION]", new Vector2(_SM.GraphicsDevice.Viewport.Width-500, _SM.GraphicsDevice.Viewport.Height - 50), Color.White);
+            spriteBatch.DrawString(uiFont, "[PLEXIGLASS EDITION]", new Vector2(Sm.GraphicsDevice.Viewport.Width-500, Sm.GraphicsDevice.Viewport.Height - 50), Color.White);
             spriteBatch.End();
         }
 
@@ -68,7 +68,7 @@ namespace Infiniminer.States
         {
             if (key == Keys.Escape)
             {
-                _SM.Exit();
+                Sm.Exit();
             }
         }
 
@@ -80,7 +80,7 @@ namespace Infiniminer.States
         public override void OnMouseDown(MouseButton button, int x, int y)
         {
             nextState = "Infiniminer.States.ServerBrowserState";
-            _P.PlaySound(InfiniminerSound.ClickHigh);
+            P.PlaySound(InfiniminerSound.ClickHigh);
         }
 
         public override void OnMouseUp(MouseButton button, int x, int y)

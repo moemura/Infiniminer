@@ -72,8 +72,8 @@ namespace StateMasher
             currentState.PrecacheContent();
 
             // Set up the new state.
-            currentState._P = propertyBag;
-            currentState._SM = this;
+            currentState.P = propertyBag;
+            currentState.Sm = this;
             currentState.OnEnter(currentStateType);
             currentStateType = newState;
             needToRenderOnEnter = true;

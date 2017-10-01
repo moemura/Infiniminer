@@ -65,8 +65,8 @@ namespace Infiniminer
                 _P = gameInstance.propertyBag;
 
             // Draw the skybox.
-            Matrix viewMatrix = _P.PlayerContainer.playerCamera.ViewMatrix;
-            Matrix projectionMatrix = _P.PlayerContainer.playerCamera.ProjectionMatrix;
+            Matrix viewMatrix = _P.PlayerContainer.PlayerCamera.ViewMatrix;
+            Matrix projectionMatrix = _P.PlayerContainer.PlayerCamera.ProjectionMatrix;
 
             effect.CurrentTechnique = effect.Techniques["Skyplane"];
             effect.Parameters["xWorld"].SetValue(Matrix.Identity);

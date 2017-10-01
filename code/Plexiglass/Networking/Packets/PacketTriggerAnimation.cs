@@ -1,28 +1,25 @@
 ﻿using Infiniminer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Networking.Packets
 {
     public class PacketTriggerAnimation : IPacket
     {
-        public float animationTime;
+        public float AnimationTime;
 
         public PacketTriggerAnimation()
         {
-            animationTime = 0.0f;
+            AnimationTime = 0.0f;
         }
 
         public PacketTriggerAnimation(float animationTime)
         {
-            this.animationTime = animationTime;
+            AnimationTime = animationTime;
         }
 
         public void Deserialize(byte[] data)
         {
-            this.animationTime = BitConverter.ToSingle(data, 0);
+            AnimationTime = BitConverter.ToSingle(data, 0);
         }
 
         public PacketDirectionality GetDirectionality()
@@ -30,14 +27,14 @@ namespace Plexiglass.Networking.Packets
             return PacketDirectionality.SERVER_TO_CLIENT;
         }
 
-        public uint GetPacketID()
+        public uint GetPacketId()
         {
             return (uint)InfiniminerMessage.TriggerConstructionGunAnimation;
         }
 
         public byte[] Serialize()
         {
-            return BitConverter.GetBytes(animationTime);
+            return BitConverter.GetBytes(AnimationTime);
         }
     }
 }

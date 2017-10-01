@@ -37,15 +37,15 @@ namespace Infiniminer.States
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = true;
+            Sm.IsMouseVisible = true;
 
-            skyplaneEngine = _P.GetEngine<SkyplaneEngine>("skyplaneEngine");
-            playerEngine = _P.GetEngine<PlayerEngine>("playerEngine");
-            interfaceEngine = _P.GetEngine<InterfaceEngine>("interfaceEngine");
-            particleEngine = _P.GetEngine<ParticleEngine>("particleEngine");
+            skyplaneEngine = P.GetEngine<SkyplaneEngine>("skyplaneEngine");
+            playerEngine = P.GetEngine<PlayerEngine>("playerEngine");
+            interfaceEngine = P.GetEngine<InterfaceEngine>("interfaceEngine");
+            particleEngine = P.GetEngine<ParticleEngine>("particleEngine");
 
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                     _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
+            drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
+                                     Sm.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
                                      1024,
                                      1024);
 
@@ -60,7 +60,7 @@ namespace Infiniminer.States
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
             // Do network stuff.
-            (_SM as InfiniminerGame).UpdateNetwork(gameTime);
+            (Sm as InfiniminerGame).UpdateNetwork(gameTime);
 
             skyplaneEngine.Update(gameTime);
             playerEngine.Update(gameTime);
@@ -79,7 +79,7 @@ namespace Infiniminer.States
         {
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            spriteBatch.Draw((_P.PlayerContainer.playerTeam == PlayerTeam.Red)?texMenuRed:texMenuBlue, drawRect, Color.White);
+            spriteBatch.Draw((P.PlayerContainer.PlayerTeam == PlayerTeam.Red)?texMenuRed:texMenuBlue, drawRect, Color.White);
             spriteBatch.End();
         }
 
@@ -100,28 +100,28 @@ namespace Infiniminer.States
             switch (ClickRegion.HitTest(clkClassMenu, new Point(x, y)))
             {
                 case "miner":
-                    _P.SetPlayerClass(PlayerClass.Miner);
+                    P.SetPlayerClass(PlayerClass.Miner);
                     nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "engineer":
-                    _P.SetPlayerClass(PlayerClass.Engineer);
+                    P.SetPlayerClass(PlayerClass.Engineer);
                     nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "prospector":
-                    _P.SetPlayerClass(PlayerClass.Prospector);
+                    P.SetPlayerClass(PlayerClass.Prospector);
                     nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "sapper":
-                    _P.SetPlayerClass(PlayerClass.Sapper);
+                    P.SetPlayerClass(PlayerClass.Sapper);
                     nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "cancel":
                     nextState = "Infiniminer.States.MainGameState";
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
             }
         }
@@ -140,8 +140,8 @@ namespace Infiniminer.States
 
         public override void PrecacheContent()
         {
-            texMenuRed = _SM.LoadContent<Texture2D>("menus/tex_menu_class_red");
-            texMenuBlue = _SM.LoadContent<Texture2D>("menus/tex_menu_class_blue");
+            texMenuRed = Sm.LoadContent<Texture2D>("menus/tex_menu_class_red");
+            texMenuBlue = Sm.LoadContent<Texture2D>("menus/tex_menu_class_blue");
         }
     }
 }

@@ -2,10 +2,6 @@
 using Plexiglass.Networking;
 using Plexiglass.Networking.Handlers;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PlexiglassTests.Packets
 {
@@ -16,7 +12,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Registration")]
         public void PacketPlayerSetTeam_RegisteringPacket_Registers()
         {
-            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT, null, null);
+            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT);
             packetRegistry.RegisterPacket<PacketPlayerSetTeam, PacketPlayerSetTeamHandler>();
         }
 
@@ -24,9 +20,11 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Serialization")]
         public void PacketPlayerSetTeam_Serializing_Successful()
         {
-            var packet = new PacketPlayerSetTeam();
-            packet.playerId = 0xF005BA11;
-            packet.playerTeam = 0xEA;
+            var packet = new PacketPlayerSetTeam
+            {
+                PlayerId = 0xF005BA11,
+                PlayerTeam = 0xEA
+            };
 
 
             var data = packet.Serialize();
@@ -34,7 +32,7 @@ namespace PlexiglassTests.Packets
 
             Assert.AreEqual(comp.Length, data.Length, "Serialized data was not expected length!");
 
-            for(int i =0;i < data.Length;i++)
+            for(var i =0;i < data.Length;i++)
             {
                 Assert.AreEqual(comp[i], data[i]);
             }
@@ -50,8 +48,8 @@ namespace PlexiglassTests.Packets
 
             packet.Deserialize(comp);
 
-            Assert.AreEqual(0xF005BA11, packet.playerId);
-            Assert.AreEqual(0xEA, packet.playerTeam);
+            Assert.AreEqual(0xF005BA11, packet.PlayerId);
+            Assert.AreEqual(0xEA, packet.PlayerTeam);
         }
     }
 }

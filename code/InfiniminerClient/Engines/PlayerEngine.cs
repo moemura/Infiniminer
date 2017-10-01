@@ -56,12 +56,12 @@ namespace Infiniminer
 
             foreach (Player p in _P.playerList.Values)
             {
-                if (p.Alive && p.ID != _P.PlayerContainer.playerMyId)
+                if (p.Alive && p.ID != _P.PlayerContainer.PlayerMyId)
                 {
-                    p.SpriteModel.Draw(_P.PlayerContainer.playerCamera.ViewMatrix,
-                                       _P.PlayerContainer.playerCamera.ProjectionMatrix,
-                                       _P.PlayerContainer.playerCamera.Position,
-                                       _P.PlayerContainer.playerCamera.GetLookVector(),
+                    p.SpriteModel.Draw(_P.PlayerContainer.PlayerCamera.ViewMatrix,
+                                       _P.PlayerContainer.PlayerCamera.ProjectionMatrix,
+                                       _P.PlayerContainer.PlayerCamera.Position,
+                                       _P.PlayerContainer.PlayerCamera.GetLookVector(),
                                        p.Position - Vector3.UnitY * 1.5f,
                                        p.Heading,
                                        2);
@@ -78,22 +78,22 @@ namespace Infiniminer
 
             foreach (Player p in _P.playerList.Values)
             {
-                if (p.Alive && p.ID != _P.PlayerContainer.playerMyId)
+                if (p.Alive && p.ID != _P.PlayerContainer.PlayerMyId)
                 {
                     // Figure out what text we should draw on the player - only for teammates and nearby enemies
                     string playerText = "";
                     bool continueDraw=false;
-                    if (p.ID != _P.PlayerContainer.playerMyId && p.Team == _P.PlayerContainer.playerTeam)
+                    if (p.ID != _P.PlayerContainer.PlayerMyId && p.Team == _P.PlayerContainer.PlayerTeam)
                         continueDraw = true;
                     else
                     {
-                        Vector3 diff = (p.Position -_P.PlayerContainer.playerPosition);
+                        Vector3 diff = (p.Position -_P.PlayerContainer.PlayerPosition);
                         float len = diff.Length();
                         diff.Normalize();
                         if (len<=15){
                             Vector3 hit = Vector3.Zero;
                             Vector3 build = Vector3.Zero;
-                            blockEngine.RayCollision(_P.PlayerContainer.playerPosition + new Vector3(0f, 0.1f, 0f), diff, len, 25, ref hit, ref build);
+                            blockEngine.RayCollision(_P.PlayerContainer.PlayerPosition + new Vector3(0f, 0.1f, 0f), diff, len, 25, ref hit, ref build);
                             if (hit == Vector3.Zero) //Why is this reversed?
                                 continueDraw = true;
                         }
@@ -104,8 +104,8 @@ namespace Infiniminer
                         if (p.Ping > 0)
                             playerText = "*** " + playerText + " ***";
 
-                        p.SpriteModel.DrawText(_P.PlayerContainer.playerCamera.ViewMatrix,
-                                               _P.PlayerContainer.playerCamera.ProjectionMatrix,
+                        p.SpriteModel.DrawText(_P.PlayerContainer.PlayerCamera.ViewMatrix,
+                                               _P.PlayerContainer.PlayerCamera.ProjectionMatrix,
                                                p.Position - Vector3.UnitY * 1.5f,
                                                playerText, p.Team == PlayerTeam.Blue ? _P.blue : _P.red);//Defines.IM_BLUE : Defines.IM_RED);
                     }

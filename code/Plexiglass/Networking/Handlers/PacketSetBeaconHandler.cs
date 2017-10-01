@@ -1,10 +1,6 @@
 ﻿using Infiniminer;
 using Plexiglass.Client;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Plexiglass.Client.States;
 
 namespace Plexiglass.Networking.Handlers
@@ -13,17 +9,20 @@ namespace Plexiglass.Networking.Handlers
     {
         public object HandlePacket(PacketSetBeacon packet, IPropertyBag propertyBag = null, IStateMachine gameInstance = null)
         {
-            if (packet.text == "")
+            if (packet.Text == "")
             {
-                if (propertyBag.TeamContainer.BeaconList.ContainsKey(packet.position))
-                    propertyBag.TeamContainer.BeaconList.Remove(packet.position);
+                if (propertyBag != null && propertyBag.TeamContainer.BeaconList.ContainsKey(packet.Position))
+                    propertyBag.TeamContainer.BeaconList.Remove(packet.Position);
             }
             else
             {
-                Beacon newBeacon = new Beacon();
-                newBeacon.ID = packet.text;
-                newBeacon.Team = packet.team;
-                propertyBag.TeamContainer.BeaconList.Add(packet.position, newBeacon);
+                var newBeacon = new Beacon
+                {
+                    ID = packet.Text,
+                    Team = packet.Team
+                };
+
+                propertyBag?.TeamContainer.BeaconList.Add(packet.Position, newBeacon);
             }
 
             return null;

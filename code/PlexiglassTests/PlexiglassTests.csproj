@@ -58,6 +58,8 @@
     <Compile Include="PacketRegistryTest.cs" />
     <Compile Include="Packets\PacketBlockBulkTransferTest.cs" />
     <Compile Include="Packets\PacketBlockSetTest.cs" />
+    <Compile Include="Packets\PacketPlayerDeadTest.cs" />
+    <Compile Include="Packets\PacketPlayerLeftTest.cs" />
     <Compile Include="Packets\PacketPlayerJoinedTest.cs" />
     <Compile Include="Packets\PacketResourceUpdateTest.cs" />
     <Compile Include="Packets\PacketPlayerSetTeamTest.cs" />

@@ -2,11 +2,7 @@
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Plexiglass.Client.Engine;
-using Plexiglass.Networking;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Client
 {
@@ -21,6 +17,8 @@ namespace Plexiglass.Client
         SettingsContainer SettingsContainer { get; set; }
         ChatContainer ChatContainer { get; set; }
         TeamContainer TeamContainer { get; set; }
+
+        GameTime CurrentGameTime { get; set; }
 
         bool[,] MapLoadProgress { get; set; }
 

@@ -213,9 +213,9 @@ namespace Infiniminer
         {
             if (blockType == BlockType.None)
                 return true;
-            if (gameInstance.propertyBag.PlayerContainer.playerTeam == PlayerTeam.Red && blockType == BlockType.TransRed)
+            if (gameInstance.propertyBag.PlayerContainer.PlayerTeam == PlayerTeam.Red && blockType == BlockType.TransRed)
                 return true;
-            if (gameInstance.propertyBag.PlayerContainer.playerTeam == PlayerTeam.Blue && blockType == BlockType.TransBlue)
+            if (gameInstance.propertyBag.PlayerContainer.PlayerTeam == PlayerTeam.Blue && blockType == BlockType.TransBlue)
                 return true;
             return false;
         }
@@ -268,7 +268,7 @@ namespace Infiniminer
 
                     // If this isn't in our view frustum, don't render it.
                     BoundingSphere regionBounds = new BoundingSphere(GetRegionCenter(r), REGIONSIZE);
-                    BoundingFrustum boundingFrustum = new BoundingFrustum(gameInstance.propertyBag.PlayerContainer.playerCamera.ViewMatrix * gameInstance.propertyBag.PlayerContainer.playerCamera.ProjectionMatrix);
+                    BoundingFrustum boundingFrustum = new BoundingFrustum(gameInstance.propertyBag.PlayerContainer.PlayerCamera.ViewMatrix * gameInstance.propertyBag.PlayerContainer.PlayerCamera.ProjectionMatrix);
                     if (boundingFrustum.Contains(regionBounds) == ContainmentType.Disjoint)
                         continue;
 
@@ -299,8 +299,8 @@ namespace Infiniminer
                 basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
             
             basicEffect.Parameters["xWorld"].SetValue(Matrix.Identity);
-            basicEffect.Parameters["xView"].SetValue(gameInstance.propertyBag.PlayerContainer.playerCamera.ViewMatrix);
-            basicEffect.Parameters["xProjection"].SetValue(gameInstance.propertyBag.PlayerContainer.playerCamera.ProjectionMatrix);
+            basicEffect.Parameters["xView"].SetValue(gameInstance.propertyBag.PlayerContainer.PlayerCamera.ViewMatrix);
+            basicEffect.Parameters["xProjection"].SetValue(gameInstance.propertyBag.PlayerContainer.PlayerCamera.ProjectionMatrix);
             basicEffect.Parameters["xTexture"].SetValue(blockTexture);
             basicEffect.Parameters["xLODColor"].SetValue(lodColor.ToVector3());
 

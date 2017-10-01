@@ -71,6 +71,10 @@
     <Compile Include="Networking\Handlers\PacketBlockBulkTransferHandler.cs" />
     <Compile Include="Networking\Handlers\PacketBlockSetHandler.cs" />
     <Compile Include="Networking\Handlers\PacketPingHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPlayerAliveHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPlayerDeadHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPlayerUpdateHandler.cs" />
+    <Compile Include="Networking\Handlers\PacketPlayerLeftHandler.cs" />
     <Compile Include="Networking\Handlers\PacketPlayerJoinedHandler.cs" />
     <Compile Include="Networking\Handlers\PacketPlayerSetTeamHandler.cs" />
     <Compile Include="Networking\Handlers\PacketResourceUpdateHandler.cs" />
@@ -83,7 +87,11 @@
     <Compile Include="Networking\PacketSerializationTools.cs" />
     <Compile Include="Networking\Packets\PacketBlockBulkTransfer.cs" />
     <Compile Include="Networking\Packets\PacketBlockSet.cs" />
+    <Compile Include="Networking\Packets\PacketPlayerAlive.cs" />
+    <Compile Include="Networking\Packets\PacketPlayerUpdate.cs" />
     <Compile Include="Networking\Packets\PacketPlayerJoined.cs" />
+    <Compile Include="Networking\Packets\PacketPlayerDead.cs" />
+    <Compile Include="Networking\Packets\PacketPlayerLeft.cs" />
     <Compile Include="Networking\Packets\PacketPlayerSetTeam.cs" />
     <Compile Include="Networking\Packets\PacketResourceUpdate.cs" />
     <Compile Include="Networking\Packets\PacketSetBeacon.cs" />

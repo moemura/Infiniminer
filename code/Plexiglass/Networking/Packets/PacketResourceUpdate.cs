@@ -1,21 +1,18 @@
 ﻿using Infiniminer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Networking.Packets
 {
     public class PacketResourceUpdate : IPacket
     {
-        public uint newOre;
-        public uint newCash;
-        public uint newWeight;
-        public uint newOreMax;
-        public uint newWeightMax;
-        public uint newOreTeam;
-        public uint newTeamRedCash;
-        public uint newTeamBlueCash;
+        public uint NewOre;
+        public uint NewCash;
+        public uint NewWeight;
+        public uint NewOreMax;
+        public uint NewWeightMax;
+        public uint NewOreTeam;
+        public uint NewTeamRedCash;
+        public uint NewTeamBlueCash;
 
         public const int NUMBER_OF_FIELDS = 8;
 
@@ -23,14 +20,14 @@ namespace Plexiglass.Networking.Packets
 
         public void Deserialize(byte[] data)
         {
-            newOre = BitConverter.ToUInt32(data, 0);
-            newCash = BitConverter.ToUInt32(data, 4);
-            newWeight = BitConverter.ToUInt32(data, 8);
-            newOreMax = BitConverter.ToUInt32(data, 12);
-            newWeightMax = BitConverter.ToUInt32(data, 16);
-            newOreTeam = BitConverter.ToUInt32(data, 20);
-            newTeamRedCash = BitConverter.ToUInt32(data, 24);
-            newTeamBlueCash = BitConverter.ToUInt32(data, 28);
+            NewOre = BitConverter.ToUInt32(data, 0);
+            NewCash = BitConverter.ToUInt32(data, 4);
+            NewWeight = BitConverter.ToUInt32(data, 8);
+            NewOreMax = BitConverter.ToUInt32(data, 12);
+            NewWeightMax = BitConverter.ToUInt32(data, 16);
+            NewOreTeam = BitConverter.ToUInt32(data, 20);
+            NewTeamRedCash = BitConverter.ToUInt32(data, 24);
+            NewTeamBlueCash = BitConverter.ToUInt32(data, 28);
         }
 
         public PacketDirectionality GetDirectionality()
@@ -38,22 +35,22 @@ namespace Plexiglass.Networking.Packets
             return PacketDirectionality.SERVER_TO_CLIENT;
         }
 
-        public uint GetPacketID()
+        public uint GetPacketId()
         {
             return (uint)InfiniminerMessage.ResourceUpdate;
         }
 
         public byte[] Serialize()
         {
-            byte[] data = new byte[PACKET_SIZE];
-            BitConverter.GetBytes(newOre).CopyTo(data, 0);
-            BitConverter.GetBytes(newCash).CopyTo(data, 4);
-            BitConverter.GetBytes(newWeight).CopyTo(data, 8);
-            BitConverter.GetBytes(newOreMax).CopyTo(data, 12);
-            BitConverter.GetBytes(newWeightMax).CopyTo(data, 16);
-            BitConverter.GetBytes(newOreTeam).CopyTo(data, 20);
-            BitConverter.GetBytes(newTeamRedCash).CopyTo(data, 24);
-            BitConverter.GetBytes(newTeamBlueCash).CopyTo(data, 28);
+            var data = new byte[PACKET_SIZE];
+            BitConverter.GetBytes(NewOre).CopyTo(data, 0);
+            BitConverter.GetBytes(NewCash).CopyTo(data, 4);
+            BitConverter.GetBytes(NewWeight).CopyTo(data, 8);
+            BitConverter.GetBytes(NewOreMax).CopyTo(data, 12);
+            BitConverter.GetBytes(NewWeightMax).CopyTo(data, 16);
+            BitConverter.GetBytes(NewOreTeam).CopyTo(data, 20);
+            BitConverter.GetBytes(NewTeamRedCash).CopyTo(data, 24);
+            BitConverter.GetBytes(NewTeamBlueCash).CopyTo(data, 28);
             return data;
         }
     }

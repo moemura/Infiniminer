@@ -1,8 +1,4 @@
 ﻿using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Plexiglass.Client;
 using Plexiglass.Client.States;
 
@@ -12,14 +8,16 @@ namespace Plexiglass.Networking.Handlers
     {
         public object HandlePacket(PacketResourceUpdate packet, IPropertyBag propertyBag = null, IStateMachine gameInstance = null)
         {
-            propertyBag.PlayerContainer.playerOre = packet.newOre;
-            propertyBag.PlayerContainer.playerCash = packet.newCash;
-            propertyBag.PlayerContainer.playerWeight = packet.newWeight;
-            propertyBag.PlayerContainer.playerOreMax = packet.newOreMax;
-            propertyBag.PlayerContainer.playerWeightMax = packet.newWeightMax;
-            propertyBag.TeamContainer.teamOre = packet.newOreTeam;
-            propertyBag.TeamContainer.teamRedCash = packet.newTeamRedCash;
-            propertyBag.TeamContainer.teamBlueCash = packet.newTeamBlueCash;
+            if (propertyBag == null) return null;
+
+            propertyBag.PlayerContainer.PlayerOre = packet.NewOre;
+            propertyBag.PlayerContainer.PlayerCash = packet.NewCash;
+            propertyBag.PlayerContainer.PlayerWeight = packet.NewWeight;
+            propertyBag.PlayerContainer.PlayerOreMax = packet.NewOreMax;
+            propertyBag.PlayerContainer.PlayerWeightMax = packet.NewWeightMax;
+            propertyBag.TeamContainer.TeamOre = packet.NewOreTeam;
+            propertyBag.TeamContainer.TeamRedCash = packet.NewTeamRedCash;
+            propertyBag.TeamContainer.TeamBlueCash = packet.NewTeamBlueCash;
 
             return null;
         }

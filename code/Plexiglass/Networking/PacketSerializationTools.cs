@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Plexiglass.Networking
@@ -12,9 +10,9 @@ namespace Plexiglass.Networking
         {
             if (offset > data.Length) return "";
 
-            string str = "";
+            var str = "";
 
-            for(int i =offset;i < data.Length;i++)
+            for(var i =offset;i < data.Length;i++)
             {
                 if (data[i] == '\0') break;
                 str += (char)data[i];
@@ -27,11 +25,13 @@ namespace Plexiglass.Networking
         {
             if (offset >= data.Length || (offset + 12) >= data.Length) return Vector3.Zero;
 
-            Vector3 vec = new Vector3();
+            var vec = new Vector3
+            {
+                X = BitConverter.ToSingle(data, offset),
+                Y = BitConverter.ToSingle(data, offset + 4),
+                Z = BitConverter.ToSingle(data, offset + 8)
+            };
 
-            vec.X = BitConverter.ToSingle(data, offset);
-            vec.Y = BitConverter.ToSingle(data, offset + 4);
-            vec.Z = BitConverter.ToSingle(data, offset + 8);
 
             return vec;
         }
@@ -43,7 +43,7 @@ namespace Plexiglass.Networking
 
         public static byte[] FromVector3(Vector3 vec)
         {
-            byte[] data = new byte[12];
+            var data = new byte[12];
             BitConverter.GetBytes(vec.X).CopyTo(data, 0);
             BitConverter.GetBytes(vec.Y).CopyTo(data, 4);
             BitConverter.GetBytes(vec.Z).CopyTo(data, 8);

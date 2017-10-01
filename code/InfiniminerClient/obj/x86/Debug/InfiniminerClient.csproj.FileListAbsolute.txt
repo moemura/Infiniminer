@@ -124,3 +124,5 @@ C:\Users\hp\Source\Repos\infiniminer\bin\Infiniminer.exe
 C:\Users\hp\Source\Repos\infiniminer\bin\Infiniminer.pdb
 C:\Users\hp\Source\Repos\infiniminer\code\InfiniminerClient\obj\x86\Debug\Infiniminer.exe
 C:\Users\hp\Source\Repos\infiniminer\code\InfiniminerClient\obj\x86\Debug\Infiniminer.pdb
+C:\Users\Ethan\Documents\Programming\infiniminer\code\InfiniminerClient\obj\x86\Debug\Infiniminer.exe
+C:\Users\Ethan\Documents\Programming\infiniminer\code\InfiniminerClient\obj\x86\Debug\Infiniminer.pdb

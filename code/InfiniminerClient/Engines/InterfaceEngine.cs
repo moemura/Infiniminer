@@ -118,29 +118,29 @@ namespace Infiniminer
             if (_P.chatFullBuffer.Count > bufferSize)
                 _P.chatFullBuffer.RemoveRange(bufferSize, _P.chatFullBuffer.Count - bufferSize);
 
-            if (_P.PlayerContainer.constructionGunAnimation > 0)
+            if (_P.PlayerContainer.ConstructionGunAnimation > 0)
             {
-                if (_P.PlayerContainer.constructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
-                    _P.PlayerContainer.constructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_P.PlayerContainer.ConstructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
+                    _P.PlayerContainer.ConstructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 else
-                    _P.PlayerContainer.constructionGunAnimation = 0;
+                    _P.PlayerContainer.ConstructionGunAnimation = 0;
             }
             else
             {
-                if (_P.PlayerContainer.constructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
-                    _P.PlayerContainer.constructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_P.PlayerContainer.ConstructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
+                    _P.PlayerContainer.ConstructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 else
-                    _P.PlayerContainer.constructionGunAnimation = 0;
+                    _P.PlayerContainer.ConstructionGunAnimation = 0;
             }
         }
 
         public void RenderRadarBlip(SpriteBatch spriteBatch, Vector3 position, Color color, bool ping, string text)
         {
             // Figure out the relative position for the radar blip.
-            Vector3 relativePosition = position - _P.PlayerContainer.playerPosition;
+            Vector3 relativePosition = position - _P.PlayerContainer.PlayerPosition;
             float relativeAltitude = relativePosition.Y;
             relativePosition.Y = 0;
-            Matrix rotationMatrix = Matrix.CreateRotationY(-_P.PlayerContainer.playerCamera.Yaw);
+            Matrix rotationMatrix = Matrix.CreateRotationY(-_P.PlayerContainer.PlayerCamera.Yaw);
             relativePosition = Vector3.Transform(relativePosition, rotationMatrix) * 10;
             float relativeLength = Math.Min(relativePosition.Length(), 93);
             if (relativeLength != 0)
@@ -192,9 +192,9 @@ namespace Infiniminer
 
             Texture2D textureToUse;
             if (Mouse.GetState().LeftButton == ButtonState.Pressed || Mouse.GetState().MiddleButton == ButtonState.Pressed || Mouse.GetState().RightButton == ButtonState.Pressed)
-                textureToUse = _P.PlayerContainer.playerTeam == PlayerTeam.Red ? texToolDetonatorDownRed : texToolDetonatorDownBlue;
+                textureToUse = _P.PlayerContainer.PlayerTeam == PlayerTeam.Red ? texToolDetonatorDownRed : texToolDetonatorDownBlue;
             else
-                textureToUse = _P.PlayerContainer.playerTeam == PlayerTeam.Red ? texToolDetonatorUpRed : texToolDetonatorUpBlue;
+                textureToUse = _P.PlayerContainer.PlayerTeam == PlayerTeam.Red ? texToolDetonatorUpRed : texToolDetonatorUpBlue;
 
             spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
         }
@@ -207,19 +207,19 @@ namespace Infiniminer
             int drawX = screenWidth / 2 - 32 * 3;
             int drawY = screenHeight - 102 * 3;
 
-            spriteBatch.Draw(_P.PlayerContainer.playerTeam == PlayerTeam.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
+            spriteBatch.Draw(_P.PlayerContainer.PlayerTeam == PlayerTeam.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
 
-            if (_P.PlayerContainer.radarValue > 0)
+            if (_P.PlayerContainer.RadarValue > 0)
                 spriteBatch.Draw(texToolRadarLED, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.PlayerContainer.radarValue == 200)
+            if (_P.PlayerContainer.RadarValue == 200)
                 spriteBatch.Draw(texToolRadarGold, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.PlayerContainer.radarValue == 1000)
+            if (_P.PlayerContainer.RadarValue == 1000)
                 spriteBatch.Draw(texToolRadarDiamond, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.PlayerContainer.playerToolCooldown > 0.2f)
+            if (_P.PlayerContainer.PlayerToolCooldown > 0.2f)
                 spriteBatch.Draw(texToolRadarFlash, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
 
-            int pointerOffset = (int)(30 - _P.PlayerContainer.radarDistance) / 2;  // ranges from 0 to 15 inclusive
-            if (_P.PlayerContainer.radarDistance == 30)
+            int pointerOffset = (int)(30 - _P.PlayerContainer.RadarDistance) / 2;  // ranges from 0 to 15 inclusive
+            if (_P.PlayerContainer.RadarDistance == 30)
                 pointerOffset = 15;
             spriteBatch.Draw(texToolRadarPointer, new Rectangle(drawX + 54 * 3, drawY + 20 * 3 + pointerOffset * 3, 4 * 3, 5 * 3), Color.White);
         }
@@ -233,11 +233,11 @@ namespace Infiniminer
             int drawY = screenHeight - 91 * 3;
 
             Texture2D gunSprite = texToolBuild;
-            if (_P.PlayerContainer.constructionGunAnimation < -0.001)
+            if (_P.PlayerContainer.ConstructionGunAnimation < -0.001)
                 gunSprite = texToolBuildCharge;
-            else if (_P.PlayerContainer.constructionGunAnimation > 0.3)
+            else if (_P.PlayerContainer.ConstructionGunAnimation > 0.3)
                 gunSprite = texToolBuildBlast;
-            else if (_P.PlayerContainer.constructionGunAnimation > 0.001)
+            else if (_P.PlayerContainer.ConstructionGunAnimation > 0.001)
                 gunSprite = texToolBuildSmoke;
             spriteBatch.Draw(gunSprite, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
             spriteBatch.Draw(blockIcons[blockType], new Rectangle(drawX + 37 * 3, drawY + 50 * 3, 117, 63), Color.White);
@@ -280,7 +280,7 @@ namespace Infiniminer
                                                             texCrosshairs.Height), Color.White);
 
             // If equipped, draw the tool.
-            switch (_P.PlayerContainer.playerTools[_P.PlayerContainer.playerToolSelected])
+            switch (_P.PlayerContainer.PlayerTools[_P.PlayerContainer.PlayerToolSelected])
             {
                 case PlayerTools.Detonator:
                     RenderDetonator(graphicsDevice, spriteBatch);
@@ -291,7 +291,7 @@ namespace Infiniminer
                     break;
 
                 case PlayerTools.ConstructionGun:
-                    RenderConstructionGun(graphicsDevice, spriteBatch, _P.PlayerContainer.playerBlocks[_P.PlayerContainer.playerBlockSelected]);
+                    RenderConstructionGun(graphicsDevice, spriteBatch, _P.PlayerContainer.PlayerBlocks[_P.PlayerContainer.PlayerBlockSelected]);
                     break;
 
                 case PlayerTools.DeconstructionGun:
@@ -301,8 +301,8 @@ namespace Infiniminer
                 default:
                     {
                         // Draw info about what we have equipped.
-                        PlayerTools currentTool = _P.PlayerContainer.playerTools[_P.PlayerContainer.playerToolSelected];
-                        BlockType currentBlock = _P.PlayerContainer.playerBlocks[_P.PlayerContainer.playerBlockSelected];
+                        PlayerTools currentTool = _P.PlayerContainer.PlayerTools[_P.PlayerContainer.PlayerToolSelected];
+                        BlockType currentBlock = _P.PlayerContainer.PlayerBlocks[_P.PlayerContainer.PlayerBlockSelected];
                         string equipment = currentTool.ToString();
                         if (currentTool == PlayerTools.ConstructionGun)
                             equipment += " - " + currentBlock.ToString() + " (" + BlockInformation.GetCost(currentBlock) + ")";
@@ -315,7 +315,7 @@ namespace Infiniminer
                 RenderMessageCenter(spriteBatch, String.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
 
             // Show the altimeter.
-            int altitude = (int)(_P.PlayerContainer.playerPosition.Y - 64 + Defines.GROUND_LEVEL);
+            int altitude = (int)(_P.PlayerContainer.PlayerPosition.Y - 64 + Defines.GROUND_LEVEL);
             RenderMessageCenter(spriteBatch, String.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Defines.IM_RED, Color.Black);
 
             // Draw bank instructions.
@@ -329,9 +329,9 @@ namespace Infiniminer
             // Draw the text-based information panel.
             int textStart = (graphicsDevice.Viewport.Width - 1024) / 2;
             spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
-            spriteBatch.DrawString(uiFont, "ORE: " + _P.PlayerContainer.playerOre + "/" + _P.PlayerContainer.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "LOOT: $" + _P.PlayerContainer.playerCash, new Vector2(textStart + 170, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.PlayerContainer.playerWeight + "/" + _P.PlayerContainer.playerWeightMax, new Vector2(textStart + 340, 2), Color.White);
+            spriteBatch.DrawString(uiFont, "ORE: " + _P.PlayerContainer.PlayerOre + "/" + _P.PlayerContainer.PlayerOreMax, new Vector2(textStart + 3, 2), Color.White);
+            spriteBatch.DrawString(uiFont, "LOOT: $" + _P.PlayerContainer.PlayerCash, new Vector2(textStart + 170, 2), Color.White);
+            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.PlayerContainer.PlayerWeight + "/" + _P.PlayerContainer.PlayerWeightMax, new Vector2(textStart + 340, 2), Color.White);
             spriteBatch.DrawString(uiFont, "TEAM ORE: " + _P.teamOre, new Vector2(textStart + 515, 2), Color.White);
             spriteBatch.DrawString(uiFont, _P.redName + ": $" + _P.teamRedCash, new Vector2(textStart + 700, 2), _P.red);// Defines.IM_RED);
             spriteBatch.DrawString(uiFont, _P.blueName + ": $" + _P.teamBlueCash, new Vector2(textStart + 860, 2), _P.blue);// Defines.IM_BLUE);
@@ -342,7 +342,7 @@ namespace Infiniminer
                 spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(0f, 0f, 0f, 0.7f));
 
                 //Server name
-                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), _P.PlayerContainer.playerTeam == PlayerTeam.Blue ? _P.blue : _P.red, Color.Black);//Defines.IM_BLUE : Defines.IM_RED, Color.Black);
+                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), _P.PlayerContainer.PlayerTeam == PlayerTeam.Blue ? _P.blue : _P.red, Color.Black);//Defines.IM_BLUE : Defines.IM_RED, Color.Black);
                 
                 if (_P.teamWinners != PlayerTeam.None)
                 {
@@ -401,10 +401,10 @@ namespace Infiniminer
             // Draw the player radar.
             spriteBatch.Draw(texRadarBackground, new Vector2(10, 30), Color.White);
             foreach (Player p in _P.playerList.Values)
-                if (p.Team == _P.PlayerContainer.playerTeam && p.Alive)
-                    RenderRadarBlip(spriteBatch, p.ID == _P.PlayerContainer.playerMyId ? _P.PlayerContainer.playerPosition : p.Position, p.Team == PlayerTeam.Red ? _P.red : _P.blue, p.Ping > 0, ""); //Defines.IM_RED : Defines.IM_BLUE, p.Ping > 0, "");
+                if (p.Team == _P.PlayerContainer.PlayerTeam && p.Alive)
+                    RenderRadarBlip(spriteBatch, p.ID == _P.PlayerContainer.PlayerMyId ? _P.PlayerContainer.PlayerPosition : p.Position, p.Team == PlayerTeam.Red ? _P.red : _P.blue, p.Ping > 0, ""); //Defines.IM_RED : Defines.IM_BLUE, p.Ping > 0, "");
             foreach (KeyValuePair<Vector3, Beacon> bPair in _P.beaconList)
-                if (bPair.Value.Team == _P.PlayerContainer.playerTeam)
+                if (bPair.Value.Team == _P.PlayerContainer.PlayerTeam)
                     RenderRadarBlip(spriteBatch, bPair.Key, Color.White, false, bPair.Value.ID);
             RenderRadarBlip(spriteBatch, new Vector3(100000, 0, 32), Color.White, false, "NORTH");
 

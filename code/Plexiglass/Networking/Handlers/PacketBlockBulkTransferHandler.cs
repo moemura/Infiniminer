@@ -5,9 +5,6 @@ using Plexiglass.Client.Engine;
 using Plexiglass.Client.States;
 using Plexiglass.Networking.Packets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Networking.Handlers
 {
@@ -15,12 +12,14 @@ namespace Plexiglass.Networking.Handlers
     {
         public object HandlePacket(PacketBlockBulkTransfer packet, IPropertyBag propertyBag = null, IStateMachine gameInstance = null)
         {
-            IBlockEngine blockEngine = propertyBag.GetEngine<IBlockEngine>("blockEngine");
+            if (propertyBag == null) return null;
+
+            var blockEngine = propertyBag.GetEngine<IBlockEngine>("blockEngine");
 
             try
             {   
                 // TODO: Make compression code work
-                if (packet.isCompressed)
+                if (packet.IsCompressed)
                 {
                     /*var compressed = msgBuffer.ReadBytes(msgBuffer.LengthBytes - (int)(msgBuffer.Position / 8));
                     var compressedstream = new System.IO.MemoryStream(compressed);
@@ -40,36 +39,35 @@ namespace Plexiglass.Networking.Handlers
 
                 else
                 {
-                    propertyBag.MapLoadProgress[packet.x, packet.y] = true;
+                    propertyBag.MapLoadProgress[packet.X, packet.Y] = true;
                     for (byte dy = 0; dy < 16; dy++)
                     {
                         for (byte z = 0; z < 64; z++)
                         {
-                            BlockType blockType = (BlockType)packet.blockList[dy, z];
+                            var blockType = (BlockType)packet.BlockList[dy, z];
                             if (blockType != BlockType.None)
-                                blockEngine.DownloadList[packet.x, packet.y + dy, z] = blockType;
+                                blockEngine.DownloadList[packet.X, packet.Y + dy, z] = blockType;
                         }
                     }
                 }
 
-                bool downloadComplete = true;
+                var downloadComplete = true;
 
                 for (var x = 0; x < 64; x++)
                 {
                     for (var y = 0; y < 64; y += 16)
                     {
-                        if (propertyBag.MapLoadProgress[x, y] == false)
-                        {
-                            downloadComplete = false;
-                            break;
-                        }
+                        if (propertyBag.MapLoadProgress[x, y]) continue;
+
+                        downloadComplete = false;
+                        break;
                     }
                 }
 
                 if (downloadComplete)
                 {
-                    gameInstance.ChangeState("Infiniminer.States.TeamSelectionState");
-                    if (!propertyBag.SettingsContainer.noSound)
+                    gameInstance?.ChangeState("Infiniminer.States.TeamSelectionState");
+                    if (!propertyBag.SettingsContainer.NoSound)
                         MediaPlayer.Stop();
                     blockEngine.DownloadComplete();
                 }

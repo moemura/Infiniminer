@@ -4,10 +4,6 @@ using Microsoft.Xna.Framework;
 using Plexiglass.Networking;
 using Plexiglass.Networking.Handlers;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PlexiglassTests.Packets
 {
@@ -18,7 +14,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Registration")]
         public void PacketSetBeacon_RegisteringPacket_Registers()
         {
-            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT, null);
+            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT);
             packetRegistry.RegisterPacket<PacketSetBeacon, PacketSetBeaconHandler>();
         }
 
@@ -26,10 +22,12 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Serialization")]
         public void PacketSetBeacon_Serializing_Successful()
         {
-            var packet = new PacketSetBeacon();
-            packet.position = new Vector3(1.337f, 4.200f, 9.001f);
-            packet.text = "PingPong";
-            packet.team = PlayerTeam.Red;
+            var packet = new PacketSetBeacon
+            {
+                Position = new Vector3(1.337f, 4.200f, 9.001f),
+                Text = "PingPong",
+                Team = PlayerTeam.Red
+            };
 
             var data = packet.Serialize();
             var comp = new byte[]{  0x50, // Ripped directly from the output of a successful serialization.
@@ -57,7 +55,7 @@ namespace PlexiglassTests.Packets
 
             Assert.AreEqual(comp.Length, data.Length, "Serialized data was not expected length!");
 
-            for (int i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Length; i++)
             {
                 Assert.AreEqual(comp[i], data[i]);
             }
@@ -94,11 +92,11 @@ namespace PlexiglassTests.Packets
 
             packet.Deserialize(comp);
 
-            Assert.AreEqual(PlayerTeam.Red, packet.team);
-            Assert.AreEqual("PingPong", packet.text);
-            Assert.AreEqual(1.337f, packet.position.X);
-            Assert.AreEqual(4.200f, packet.position.Y);
-            Assert.AreEqual(9.001f, packet.position.Z);
+            Assert.AreEqual(PlayerTeam.Red, packet.Team);
+            Assert.AreEqual("PingPong", packet.Text);
+            Assert.AreEqual(1.337f, packet.Position.X);
+            Assert.AreEqual(4.200f, packet.Position.Y);
+            Assert.AreEqual(9.001f, packet.Position.Z);
         }
     }
 }

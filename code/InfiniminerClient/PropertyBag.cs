@@ -88,7 +88,7 @@ namespace Infiniminer
             PlayerList = new Dictionary<uint, Player>();
 
             // Create a camera.
-            PlayerContainer.playerCamera = new Camera(gameInstance.GraphicsDevice);
+            PlayerContainer.PlayerCamera = new Camera(gameInstance.GraphicsDevice);
             UpdateCamera();
 
             // Load sounds.
@@ -152,9 +152,9 @@ namespace Infiniminer
                 return;
 
             PlaySound(InfiniminerSound.Death);
-            PlayerContainer.playerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
-            PlayerContainer.playerVelocity = Vector3.Zero;
-            PlayerContainer.playerDead = true;
+            PlayerContainer.PlayerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
+            PlayerContainer.PlayerVelocity = Vector3.Zero;
+            PlayerContainer.PlayerDead = true;
             screenEffect = ScreenEffect.Death;
             screenEffectCounter = 0;
 
@@ -169,7 +169,7 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerDead = false;
+            PlayerContainer.PlayerDead = false;
 
             // Respawn a few blocks above a safe position above altitude 0.
             bool positionFound = false;
@@ -189,7 +189,7 @@ namespace Infiniminer
                     else if (blockType != BlockType.None)
                     {
                         // We have found a valid place to spawn, so spawn a few above it.
-                        PlayerContainer.playerPosition = startPos + Vector3.UnitY * 5;
+                        PlayerContainer.PlayerPosition = startPos + Vector3.UnitY * 5;
                         positionFound = true;
                         break;
                     }
@@ -202,13 +202,13 @@ namespace Infiniminer
 
             // If we failed to find a spawn point, drop randomly.
             if (!positionFound)
-                PlayerContainer.playerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
+                PlayerContainer.PlayerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
 
             // Drop the player on the middle of the block, not at the corner.
-            PlayerContainer.playerPosition += new Vector3(0.5f, 0, 0.5f);
+            PlayerContainer.PlayerPosition += new Vector3(0.5f, 0, 0.5f);
 
             // Zero out velocity and reset camera and screen effects.
-            PlayerContainer.playerVelocity = Vector3.Zero;
+            PlayerContainer.PlayerVelocity = Vector3.Zero;
             screenEffect = ScreenEffect.None;
             screenEffectCounter = 0;
             UpdateCamera();
@@ -224,7 +224,7 @@ namespace Infiniminer
             if (soundList.Count == 0)
                 return;
 
-            soundList[sound].Play(SettingsContainer.volumeLevel, 0.0f, 0.0f);
+            soundList[sound].Play(SettingsContainer.VolumeLevel, 0.0f, 0.0f);
         }
 
         public void PlaySound(InfiniminerSound sound, Vector3 position)
@@ -232,8 +232,8 @@ namespace Infiniminer
             if (soundList.Count == 0)
                 return;
 
-            float distance = (position - PlayerContainer.playerPosition).Length();
-            float volume = Math.Max(0, 10 - distance) / 10.0f * SettingsContainer.volumeLevel;
+            float distance = (position - PlayerContainer.PlayerPosition).Length();
+            float volume = Math.Max(0, 10 - distance) / 10.0f * SettingsContainer.VolumeLevel;
             volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
             soundList[sound].Play(volume, 0.0f, 0.0f);
         }
@@ -298,8 +298,8 @@ namespace Infiniminer
 
             ChatMessage chatMsg = new ChatMessage(textFull, chatType, 10,newlines);
             
-            ChatContainer.chatBuffer.Insert(0, chatMsg);
-            ChatContainer.chatFullBuffer.Insert(0, chatMsg);
+            ChatContainer.ChatBuffer.Insert(0, chatMsg);
+            ChatContainer.ChatFullBuffer.Insert(0, chatMsg);
             PlaySound(InfiniminerSound.ClickLow);
         }
 
@@ -326,32 +326,32 @@ namespace Infiniminer
                     // For 0 to 2, shake the camera.
                     if (screenEffectCounter < 2)
                     {
-                        Vector3 newPosition = PlayerContainer.playerCamera.Position;
+                        Vector3 newPosition = PlayerContainer.PlayerCamera.Position;
                         newPosition.X += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
                         newPosition.Y += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
                         newPosition.Z += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                        if (!GetEngine<BlockEngine>("blockEngine").SolidAtPointForPlayer(newPosition) && (newPosition - PlayerContainer.playerPosition).Length() < 0.7f)
-                            PlayerContainer.playerCamera.Position = newPosition;
+                        if (!GetEngine<BlockEngine>("blockEngine").SolidAtPointForPlayer(newPosition) && (newPosition - PlayerContainer.PlayerPosition).Length() < 0.7f)
+                            PlayerContainer.PlayerCamera.Position = newPosition;
                     }
                     // For 2 to 3, move the camera back.
                     else if (screenEffectCounter < 3)
                     {
-                        Vector3 lerpVector = PlayerContainer.playerPosition - PlayerContainer.playerCamera.Position;
-                        PlayerContainer.playerCamera.Position += 0.5f * lerpVector;
+                        Vector3 lerpVector = PlayerContainer.PlayerPosition - PlayerContainer.PlayerCamera.Position;
+                        PlayerContainer.PlayerCamera.Position += 0.5f * lerpVector;
                     }
                     else
                     {
                         screenEffect = ScreenEffect.None;
                         screenEffectCounter = 0;
-                        PlayerContainer.playerCamera.Position = PlayerContainer.playerPosition;
+                        PlayerContainer.PlayerCamera.Position = PlayerContainer.PlayerPosition;
                     }
                 }
             }
             else
             {
-                PlayerContainer.playerCamera.Position = PlayerContainer.playerPosition;
+                PlayerContainer.PlayerCamera.Position = PlayerContainer.PlayerPosition;
             }
-            PlayerContainer.playerCamera.Update();
+            PlayerContainer.PlayerCamera.Update();
         }
 
         public void UpdateCamera()
@@ -394,7 +394,7 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerTeam = playerTeam;
+            PlayerContainer.PlayerTeam = playerTeam;
 
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.PlayerSetTeam);
@@ -406,25 +406,25 @@ namespace Infiniminer
 
         public void equipWeps()
         {
-            PlayerContainer.playerToolSelected = 0;
-            PlayerContainer.playerBlockSelected = 0;
+            PlayerContainer.PlayerToolSelected = 0;
+            PlayerContainer.PlayerBlockSelected = 0;
             // TODO: PlayerClass to interface/class definitions.
             if (allWeps)
             {
-                PlayerContainer.playerTools = new PlayerTools[5] { PlayerTools.Pickaxe,
+                PlayerContainer.PlayerTools = new PlayerTools[5] { PlayerTools.Pickaxe,
                 PlayerTools.ConstructionGun,
                 PlayerTools.DeconstructionGun,
                 PlayerTools.ProspectingRadar,
                 PlayerTools.Detonator };
 
-                PlayerContainer.playerBlocks = new BlockType[12] {   PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                             PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                PlayerContainer.PlayerBlocks = new BlockType[12] {   PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                             PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
                                              BlockType.Road,
                                              BlockType.Ladder,
                                              BlockType.Jump,
                                              BlockType.Shock,
-                                             PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                             PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue,
+                                             PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
+                                             PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue,
                                              BlockType.Explosive,
                                              BlockType.Road,
                                              BlockType.Lava,
@@ -432,47 +432,47 @@ namespace Infiniminer
             }
             else
             {
-                switch (PlayerContainer.playerClass)
+                switch (PlayerContainer.PlayerClass)
                 {
                     case PlayerClass.Prospector:
-                        PlayerContainer.playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
+                        PlayerContainer.PlayerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
                                                         PlayerTools.ConstructionGun,
                                                         PlayerTools.ProspectingRadar     };
-                        PlayerContainer.playerBlocks = new BlockType[4] {   PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
+                        PlayerContainer.PlayerBlocks = new BlockType[4] {   PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                        PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                                                        PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
                                                         BlockType.Ladder    };
                         break;
 
                     case PlayerClass.Miner:
-                        PlayerContainer.playerTools = new PlayerTools[2] {  PlayerTools.Pickaxe,
+                        PlayerContainer.PlayerTools = new PlayerTools[2] {  PlayerTools.Pickaxe,
                                                         PlayerTools.ConstructionGun     };
-                        PlayerContainer.playerBlocks = new BlockType[3] {   PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                        PlayerContainer.PlayerBlocks = new BlockType[3] {   PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                        PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
                                                         BlockType.Ladder    };
                         break;
 
                     case PlayerClass.Engineer:
-                        PlayerContainer.playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
+                        PlayerContainer.PlayerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
                                                         PlayerTools.ConstructionGun,     
                                                         PlayerTools.DeconstructionGun   };
-                        PlayerContainer.playerBlocks = new BlockType[9] {   PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                        PlayerContainer.PlayerBlocks = new BlockType[9] {   PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
                                                         BlockType.TransRed,
                                                         BlockType.TransBlue, //playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue, //Only need one entry due to right-click
                                                         BlockType.Road,
                                                         BlockType.Ladder,
                                                         BlockType.Jump,
                                                         BlockType.Shock,
-                                                        PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                                        PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue  };
+                                                        PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
+                                                        PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue  };
                         break;
 
                     case PlayerClass.Sapper:
-                        PlayerContainer.playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
+                        PlayerContainer.PlayerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
                                                         PlayerTools.ConstructionGun,
                                                         PlayerTools.Detonator     };
-                        PlayerContainer.playerBlocks = new BlockType[4] {   PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        PlayerContainer.playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                        PlayerContainer.PlayerBlocks = new BlockType[4] {   PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                                                        PlayerContainer.PlayerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
                                                         BlockType.Ladder,
                                                         BlockType.Explosive     };
                         break;
@@ -482,20 +482,20 @@ namespace Infiniminer
 
         public void SetPlayerClass(PlayerClass playerClass)
         {
-            if (this.PlayerContainer.playerClass != playerClass)
+            if (this.PlayerContainer.PlayerClass != playerClass)
             {
                 if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                     return;
 
-                this.PlayerContainer.playerClass = playerClass;
+                this.PlayerContainer.PlayerClass = playerClass;
 
                 NetOutgoingMessage msgBuffer = netClient.CreateMessage();
                 msgBuffer.Write((byte)InfiniminerMessage.SelectClass);
                 msgBuffer.Write((byte)playerClass);
                 netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
 
-                PlayerContainer.playerToolSelected = 0;
-                PlayerContainer.playerBlockSelected = 0;
+                PlayerContainer.PlayerToolSelected = 0;
+                PlayerContainer.PlayerBlockSelected = 0;
 
                 equipWeps();
             }
@@ -508,12 +508,12 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerToolCooldown = GetToolCooldown(PlayerTools.ProspectingRadar);
+            PlayerContainer.PlayerToolCooldown = GetToolCooldown(PlayerTools.ProspectingRadar);
 
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.UseTool);
-            msgBuffer.Write(PlayerContainer.playerPosition);
-            msgBuffer.Write(PlayerContainer.playerCamera.GetLookVector());
+            msgBuffer.Write(PlayerContainer.PlayerPosition);
+            msgBuffer.Write(PlayerContainer.PlayerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.ProspectingRadar);
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
@@ -524,12 +524,12 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerToolCooldown = GetToolCooldown(PlayerTools.Pickaxe);
+            PlayerContainer.PlayerToolCooldown = GetToolCooldown(PlayerTools.Pickaxe);
 
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.UseTool);
-            msgBuffer.Write(PlayerContainer.playerPosition);
-            msgBuffer.Write(PlayerContainer.playerCamera.GetLookVector());
+            msgBuffer.Write(PlayerContainer.PlayerPosition);
+            msgBuffer.Write(PlayerContainer.PlayerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.Pickaxe);
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
@@ -545,14 +545,14 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerToolCooldown = GetToolCooldown(PlayerTools.ConstructionGun);
-            PlayerContainer.constructionGunAnimation = -5;
+            PlayerContainer.PlayerToolCooldown = GetToolCooldown(PlayerTools.ConstructionGun);
+            PlayerContainer.ConstructionGunAnimation = -5;
 
             // Send the message.
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.UseTool);
-            msgBuffer.Write(PlayerContainer.playerPosition);
-            msgBuffer.Write(PlayerContainer.playerCamera.GetLookVector());
+            msgBuffer.Write(PlayerContainer.PlayerPosition);
+            msgBuffer.Write(PlayerContainer.PlayerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.ConstructionGun);
             BlockType nb = blockType;
             if (alternate)
@@ -581,14 +581,14 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerToolCooldown = GetToolCooldown(PlayerTools.DeconstructionGun);
-            PlayerContainer.constructionGunAnimation = -5;
+            PlayerContainer.PlayerToolCooldown = GetToolCooldown(PlayerTools.DeconstructionGun);
+            PlayerContainer.ConstructionGunAnimation = -5;
 
             // Send the message.
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.UseTool);
-            msgBuffer.Write(PlayerContainer.playerPosition);
-            msgBuffer.Write(PlayerContainer.playerCamera.GetLookVector());
+            msgBuffer.Write(PlayerContainer.PlayerPosition);
+            msgBuffer.Write(PlayerContainer.PlayerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.DeconstructionGun);
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
@@ -599,13 +599,13 @@ namespace Infiniminer
             if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            PlayerContainer.playerToolCooldown = GetToolCooldown(PlayerTools.Detonator);
+            PlayerContainer.PlayerToolCooldown = GetToolCooldown(PlayerTools.Detonator);
 
             // Send the message.
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.UseTool);
-            msgBuffer.Write(PlayerContainer.playerPosition);
-            msgBuffer.Write(PlayerContainer.playerCamera.GetLookVector());
+            msgBuffer.Write(PlayerContainer.PlayerPosition);
+            msgBuffer.Write(PlayerContainer.PlayerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.Detonator);
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
@@ -613,7 +613,7 @@ namespace Infiniminer
 
         public void ToggleRadar()
         {
-            PlayerContainer.playerRadarMute = !PlayerContainer.playerRadarMute;
+            PlayerContainer.PlayerRadarMute = !PlayerContainer.PlayerRadarMute;
             PlaySound(InfiniminerSound.RadarSwitch);
         }
 
@@ -627,8 +627,8 @@ namespace Infiniminer
                 for (int j = -3; j <= 3; j++)
                 {
                     Matrix rotation = Matrix.CreateRotationX((float)(i * Math.PI / 128)) * Matrix.CreateRotationY((float)(j * Math.PI / 128));
-                    Vector3 scanPoint = PlayerContainer.playerPosition;
-                    Vector3 lookVector = Vector3.Transform(PlayerContainer.playerCamera.GetLookVector(), rotation);
+                    Vector3 scanPoint = PlayerContainer.PlayerPosition;
+                    Vector3 lookVector = Vector3.Transform(PlayerContainer.PlayerCamera.GetLookVector(), rotation);
                     for (int k = 0; k < 60; k++)
                     {
                         BlockType blockType = GetEngine<BlockEngine>("blockEngine").BlockAtPoint(scanPoint);
@@ -653,14 +653,14 @@ namespace Infiniminer
             // Figure out what we're looking at.
             Vector3 hitPoint = Vector3.Zero;
             Vector3 buildPoint = Vector3.Zero;
-            if (!GetEngine<BlockEngine>("blockEngine").RayCollision(PlayerContainer.playerPosition, PlayerContainer.playerCamera.GetLookVector(), 2.5f, 25, ref hitPoint, ref buildPoint))
+            if (!GetEngine<BlockEngine>("blockEngine").RayCollision(PlayerContainer.PlayerPosition, PlayerContainer.PlayerCamera.GetLookVector(), 2.5f, 25, ref hitPoint, ref buildPoint))
                 return false;
 
             // If it's a valid bank object, we're good!
             BlockType blockType = GetEngine<BlockEngine>("blockEngine").BlockAtPoint(hitPoint);
-            if (blockType == BlockType.BankRed && PlayerContainer.playerTeam == PlayerTeam.Red)
+            if (blockType == BlockType.BankRed && PlayerContainer.PlayerTeam == PlayerTeam.Red)
                 return true;
-            if (blockType == BlockType.BankBlue && PlayerContainer.playerTeam == PlayerTeam.Blue)
+            if (blockType == BlockType.BankBlue && PlayerContainer.PlayerTeam == PlayerTeam.Blue)
                 return true;
             return false;
         }
@@ -685,10 +685,10 @@ namespace Infiniminer
 
             NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)InfiniminerMessage.PlayerUpdate);
-            msgBuffer.Write(PlayerContainer.playerPosition);
-            msgBuffer.Write(PlayerContainer.playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerContainer.playerTools[PlayerContainer.playerToolSelected]);
-            msgBuffer.Write(PlayerContainer.playerToolCooldown > 0.001f);
+            msgBuffer.Write(PlayerContainer.PlayerPosition);
+            msgBuffer.Write(PlayerContainer.PlayerCamera.GetLookVector());
+            msgBuffer.Write((byte)PlayerContainer.PlayerTools[PlayerContainer.PlayerToolSelected]);
+            msgBuffer.Write(PlayerContainer.PlayerToolCooldown > 0.001f);
             netClient.SendMessage(msgBuffer, NetDeliveryMethod.Unreliable);
         }
 

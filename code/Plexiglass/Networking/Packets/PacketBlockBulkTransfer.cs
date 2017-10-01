@@ -1,16 +1,13 @@
 ﻿using Infiniminer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Networking.Packets
 {
     public class PacketBlockBulkTransfer : IPacket
     {
-        public bool isCompressed;
-        public uint x, y;
-        public ushort[,] blockList;
+        public bool IsCompressed;
+        public uint X, Y;
+        public ushort[,] BlockList;
 
         public const int Y_SIZE = 16;
         public const int Z_SIZE = 64;
@@ -22,27 +19,27 @@ namespace Plexiglass.Networking.Packets
 
         public PacketBlockBulkTransfer()
         {
-            x = 0;
-            y = 0;
-            isCompressed = false;
-            blockList = new ushort[Y_SIZE,Z_SIZE];
+            X = 0;
+            Y = 0;
+            IsCompressed = false;
+            BlockList = new ushort[Y_SIZE,Z_SIZE];
         }
 
         public PacketBlockBulkTransfer(uint x = 0, uint y = 0, bool isCompressed = false, ushort[,] blockList = null)
         {
-            this.x = x;
-            this.y = y;
-            this.isCompressed = isCompressed;
-            if (blockList.Length != Y_SIZE * Z_SIZE)
+            X = x;
+            Y = y;
+            IsCompressed = isCompressed;
+            if (blockList != null && blockList.Length != Y_SIZE * Z_SIZE)
                 throw new Exception("Blocklist is of an invalid size!");
-            this.blockList = blockList;
+            BlockList = blockList;
         }
 
         public void Deserialize(byte[] data)
         {
-            isCompressed = Convert.ToBoolean(data[0]);
-            x = BitConverter.ToUInt32(data, 1);
-            y = BitConverter.ToUInt32(data, 5);
+            IsCompressed = Convert.ToBoolean(data[0]);
+            X = BitConverter.ToUInt32(data, 1);
+            Y = BitConverter.ToUInt32(data, 5);
 
             var iterator = WITHOUT_BLOCKLIST_SIZE;
 
@@ -50,7 +47,7 @@ namespace Plexiglass.Networking.Packets
             {
                 for(var z = 0;z < Z_SIZE;z++)
                 {
-                    blockList[y, z] = BitConverter.ToUInt16(data, iterator);
+                    BlockList[y, z] = BitConverter.ToUInt16(data, iterator);
                     iterator += 2;
                 }
             }
@@ -61,7 +58,7 @@ namespace Plexiglass.Networking.Packets
             return PacketDirectionality.SERVER_TO_CLIENT;
         }
 
-        public uint GetPacketID()
+        public uint GetPacketId()
         {
             return (uint)InfiniminerMessage.BlockBulkTransfer;
         }
@@ -69,9 +66,9 @@ namespace Plexiglass.Networking.Packets
         public byte[] Serialize()
         {
             byte[] data = new byte[PACKET_SIZE];
-            data[0] = Convert.ToByte(isCompressed);
-            BitConverter.GetBytes(x).CopyTo(data, 1);
-            BitConverter.GetBytes(y).CopyTo(data, 5);
+            data[0] = Convert.ToByte(IsCompressed);
+            BitConverter.GetBytes(X).CopyTo(data, 1);
+            BitConverter.GetBytes(Y).CopyTo(data, 5);
 
             var iterator = WITHOUT_BLOCKLIST_SIZE;
 
@@ -79,7 +76,7 @@ namespace Plexiglass.Networking.Packets
             {
                 for (var z = 0; z < Z_SIZE; z++)
                 {
-                    BitConverter.GetBytes(blockList[y, z]).CopyTo(data, iterator);
+                    BitConverter.GetBytes(BlockList[y, z]).CopyTo(data, iterator);
                     iterator += 2;
                 }
             }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Plexiglass.Networking
+﻿namespace Plexiglass.Networking
 {
 
     public static class PacketDirectionalityExt
@@ -21,6 +16,8 @@ namespace Plexiglass.Networking
                     return lhs == rhs || rhs == PacketDirectionality.BIDIRECTIONAL || rhs == PacketDirectionality.POLYDIRECTIONAL;
                 case PacketDirectionality.CLIENT_TO_CLIENT:
                     return lhs == rhs || rhs == PacketDirectionality.POLYDIRECTIONAL;
+                case PacketDirectionality.ANTIDIRECTIONAL:
+                    return false;
                 default:
                     return false;
             }
@@ -39,7 +36,7 @@ namespace Plexiglass.Networking
 
     public interface IPacket
     {
-        uint GetPacketID();
+        uint GetPacketId();
         byte[] Serialize();
         void Deserialize(byte[] data);
         PacketDirectionality GetDirectionality();

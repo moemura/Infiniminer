@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Plexiglass.Networking
+﻿namespace Plexiglass.Networking
 {
     public interface IPacketRegistry
     {
-        void RegisterPacket<P, H>()
-            where P : IPacket
-            where H : IPacketHandler<P>;
+        void RegisterPacket<TP, TH>()
+            where TP : IPacket
+            where TH : IPacketHandler<TP>;
 
-        object HandlePacket<P>(P packet)
-            where P : IPacket;
+        object HandlePacket<TP>(TP packet)
+            where TP : IPacket;
 
         PacketDirectionality Directionality { get; set; }
     }

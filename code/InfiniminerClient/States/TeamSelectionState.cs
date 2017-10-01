@@ -31,16 +31,16 @@ namespace Infiniminer.States
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = true;
+            Sm.IsMouseVisible = true;
 
-            texMenu = _SM.Content.Load<Texture2D>("menus/tex_menu_team");
+            texMenu = Sm.Content.Load<Texture2D>("menus/tex_menu_team");
 
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                     _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
+            drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
+                                     Sm.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
                                      1024,
                                      1024);
 
-            uiFont = _SM.Content.Load<SpriteFont>("font_04b08");
+            uiFont = Sm.Content.Load<SpriteFont>("font_04b08");
 
             if (oldState == "Infiniminer.States.MainGameState")
                 canCancel = true;
@@ -54,7 +54,7 @@ namespace Infiniminer.States
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
             // Do network stuff.
-            (_SM as InfiniminerGame).UpdateNetwork(gameTime);
+            (Sm as InfiniminerGame).UpdateNetwork(gameTime);
 
             return nextState;
         }
@@ -66,13 +66,13 @@ namespace Infiniminer.States
 
         public void QuickDrawText(SpriteBatch spriteBatch, string text, int y, Color color)
         {
-            spriteBatch.DrawString(uiFont, text, new Vector2(_SM.GraphicsDevice.Viewport.Width / 2 - uiFont.MeasureString(text).X / 2, drawRect.Y + y), color);
+            spriteBatch.DrawString(uiFont, text, new Vector2(Sm.GraphicsDevice.Viewport.Width / 2 - uiFont.MeasureString(text).X / 2, drawRect.Y + y), color);
         }
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             int redTeamCount = 0, blueTeamCount = 0;
-            foreach (Player p in _P.playerList.Values)
+            foreach (Player p in P.playerList.Values)
             {
                 if (p.Team == PlayerTeam.Red)
                     redTeamCount += 1;
@@ -83,8 +83,8 @@ namespace Infiniminer.States
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             spriteBatch.Draw(texMenu, drawRect, Color.White);
-            QuickDrawText(spriteBatch, "" + redTeamCount + " PLAYERS", 360, _P.red);//Defines.IM_RED);
-            QuickDrawText(spriteBatch, "" + blueTeamCount + " PLAYERS", 620, _P.blue);//Defines.IM_BLUE);
+            QuickDrawText(spriteBatch, "" + redTeamCount + " PLAYERS", 360, P.red);//Defines.IM_RED);
+            QuickDrawText(spriteBatch, "" + blueTeamCount + " PLAYERS", 620, P.blue);//Defines.IM_BLUE);
             spriteBatch.End();
         }
 
@@ -106,30 +106,30 @@ namespace Infiniminer.States
             switch (ClickRegion.HitTest(clkTeamMenu, new Point(x, y)))
             {
                 case "red":
-                    if (_P.playerTeam == PlayerTeam.Red && canCancel)
+                    if (P.playerTeam == PlayerTeam.Red && canCancel)
                         nextState = "Infiniminer.States.MainGameState";
                     else
                     {
-                        _P.SetPlayerTeam(PlayerTeam.Red);
+                        P.SetPlayerTeam(PlayerTeam.Red);
                         nextState = "Infiniminer.States.ClassSelectionState";
                     }
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "blue":
-                    if (_P.playerTeam == PlayerTeam.Blue && canCancel)
+                    if (P.playerTeam == PlayerTeam.Blue && canCancel)
                         nextState = "Infiniminer.States.MainGameState";
                     else
                     {
-                        _P.SetPlayerTeam(PlayerTeam.Blue);
+                        P.SetPlayerTeam(PlayerTeam.Blue);
                         nextState = "Infiniminer.States.ClassSelectionState";
                     }
-                    _P.PlaySound(InfiniminerSound.ClickHigh);
+                    P.PlaySound(InfiniminerSound.ClickHigh);
                     break;
                 case "cancel":
                     if (canCancel)
                     {
                         nextState = "Infiniminer.States.MainGameState";
-                        _P.PlaySound(InfiniminerSound.ClickHigh);
+                        P.PlaySound(InfiniminerSound.ClickHigh);
                     }
                     break;
             }

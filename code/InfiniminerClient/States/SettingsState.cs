@@ -65,7 +65,7 @@ namespace Infiniminer.States
 
         public void addSlider(Rectangle size, bool enabled, bool visible, string text, float minVal, float maxVal, float initVal, bool integerOnly)
         {
-            InterfaceSlider temp = new InterfaceSlider((_SM as InfiniminerGame), _P);
+            InterfaceSlider temp = new InterfaceSlider((Sm as InfiniminerGame), P);
             temp.size=size;
             temp.enabled=enabled;
             temp.visible=visible;
@@ -88,7 +88,7 @@ namespace Infiniminer.States
 
         public void addButton(Rectangle size, bool enabled, bool visible, string text, string onText, string offText, bool clicked)
         {
-            InterfaceButtonToggle temp = new InterfaceButtonToggle((_SM as InfiniminerGame), _P);
+            InterfaceButtonToggle temp = new InterfaceButtonToggle((Sm as InfiniminerGame), P);
             temp.size = size;
             temp.enabled = enabled;
             temp.visible = visible;
@@ -110,7 +110,7 @@ namespace Infiniminer.States
 
         public void addTextInput(Rectangle size, bool enabled, bool visible, string text, string initVal)
         {
-            InterfaceTextInput temp = new InterfaceTextInput((_SM as InfiniminerGame), _P);
+            InterfaceTextInput temp = new InterfaceTextInput((Sm as InfiniminerGame), P);
             temp.size = size;
             temp.enabled = enabled;
             temp.visible = visible;
@@ -127,7 +127,7 @@ namespace Infiniminer.States
 
         public void addLabel(Rectangle size, bool visible, string text)
         {
-            InterfaceLabel temp = new InterfaceLabel((_SM as InfiniminerGame), _P);
+            InterfaceLabel temp = new InterfaceLabel((Sm as InfiniminerGame), P);
             temp.size = size;
             temp.visible = visible;
             temp.text = text;
@@ -136,12 +136,12 @@ namespace Infiniminer.States
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = true;
+            Sm.IsMouseVisible = true;
 
             //Load the background
-            texSettings = _SM.Content.Load<Texture2D>("menus/tex_menu_settings");
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                                 _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
+            texSettings = Sm.Content.Load<Texture2D>("menus/tex_menu_settings");
+            drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
+                                                 Sm.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
                                                  1024,
                                                  1024);
 
@@ -201,7 +201,7 @@ namespace Infiniminer.States
                     break;
                 case "accept":
                     if (saveData()>=1)
-                        _SM.Exit();
+                        Sm.Exit();
                     break;
                 /*case "keylayout":
                     saveData();

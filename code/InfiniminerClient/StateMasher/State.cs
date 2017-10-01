@@ -19,8 +19,8 @@ namespace StateMasher
 {
     public class State : IState
     {
-        public IStateMachine _SM { get; set; }
-        public IPropertyBag _P { get; set; }
+        public IStateMachine Sm { get; set; }
+        public IPropertyBag P { get; set; }
 
         public virtual void OnEnter(string oldState)
         {

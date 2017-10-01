@@ -1,23 +1,19 @@
 ﻿using Infiniminer;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Networking.Packets
 {
     public class PacketSetBeacon : IPacket
     {
-        public Vector3 position;
-        public string text;
-        public PlayerTeam team;
+        public Vector3 Position;
+        public string Text;
+        public PlayerTeam Team;
 
         public void Deserialize(byte[] data)
         {
-            text = PacketSerializationTools.GetString(data, 0);
-            position = PacketSerializationTools.GetVector3(data, text.Length+1);
-            team = (PlayerTeam)data[data.Length - 1];
+            Text = PacketSerializationTools.GetString(data, 0);
+            Position = PacketSerializationTools.GetVector3(data, Text.Length+1);
+            Team = (PlayerTeam)data[data.Length - 1];
         }
 
         public PacketDirectionality GetDirectionality()
@@ -25,18 +21,18 @@ namespace Plexiglass.Networking.Packets
             return PacketDirectionality.SERVER_TO_CLIENT;
         }
 
-        public uint GetPacketID()
+        public uint GetPacketId()
         {
             return (uint)InfiniminerMessage.SetBeacon;
         }
 
         public byte[] Serialize()
         {
-            var text = PacketSerializationTools.FromString(this.text);
-            var position = PacketSerializationTools.FromVector3(this.position);
-            byte team = (byte)this.team;
+            var text = PacketSerializationTools.FromString(Text);
+            var position = PacketSerializationTools.FromVector3(Position);
+            var team = (byte)Team;
 
-            byte[] data = new byte[text.Length + position.Length + 1];
+            var data = new byte[text.Length + position.Length + 1];
 
             text.CopyTo(data, 0);
             position.CopyTo(data, text.Length);

@@ -1,8 +1,4 @@
 ﻿using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Plexiglass.Client;
 using Plexiglass.Client.States;
 using Plexiglass.Client.Engine;
@@ -15,12 +11,14 @@ namespace Plexiglass.Networking.Handlers
     {
         public object HandlePacket(PacketBlockSet packet, IPropertyBag propertyBag = null, IStateMachine gameInstance = null)
         {
-            IBlockEngine blockEngine = propertyBag.GetEngine<IBlockEngine>("blockEngine");
+            if (propertyBag == null) return null;
+
+            var blockEngine = propertyBag.GetEngine<IBlockEngine>("blockEngine");
             // x, y, z, type, all bytes
-            uint x = packet.x;
-            uint y = packet.y;
-            uint z = packet.z;
-            BlockType blockType = (BlockType)packet.blockType;
+            var x = packet.X;
+            var y = packet.Y;
+            var z = packet.Z;
+            var blockType = (BlockType)packet.BlockType;
             if (blockType == BlockType.None)
             {
                 if (blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
@@ -31,7 +29,7 @@ namespace Plexiglass.Networking.Handlers
                 if (blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
                     blockEngine.RemoveBlock(x, y, z);
                 blockEngine.AddBlock(x, y, z, blockType);
-                gameInstance.CheckForStandingInLava();
+                gameInstance?.CheckForStandingInLava();
             }
 
             return null;

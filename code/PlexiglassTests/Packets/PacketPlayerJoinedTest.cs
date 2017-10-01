@@ -2,10 +2,6 @@
 using Plexiglass.Networking;
 using Plexiglass.Networking.Handlers;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PlexiglassTests.Packets
 {
@@ -16,7 +12,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Registration")]
         public void PacketPlayerJoined_RegisteringPacket_Registers()
         {
-            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT, null);
+            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT);
             packetRegistry.RegisterPacket<PacketPlayerJoined, PacketPlayerJoinedHandler>();
         }
 
@@ -24,9 +20,9 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Serialization")]
         public void PacketPlayerJoined_Serializing_Successful()
         {
-            var playerId = (uint)0xDEADBEEF;
-            var playerName = "TestPlayer";
-            var packet = new PacketPlayerJoined(playerId, playerName, true, false);
+            const uint PLAYER_ID = 0xDEADBEEF;
+            const string PLAYER_NAME = "TestPlayer";
+            var packet = new PacketPlayerJoined(PLAYER_ID, PLAYER_NAME, true, false);
             var data = packet.Serialize();
             var comp = new byte[] { 0xef,
                                     0xbe,
@@ -80,10 +76,10 @@ namespace PlexiglassTests.Packets
 
             packet.Deserialize(comp);
 
-            Assert.AreEqual(0xDEADBEEF, packet.playerId);
-            Assert.AreEqual("TestPlayer", packet.playerName);
-            Assert.AreEqual(true, packet.thisIsMe);
-            Assert.AreEqual(false, packet.playerAlive);
+            Assert.AreEqual(0xDEADBEEF, packet.PlayerId);
+            Assert.AreEqual("TestPlayer", packet.PlayerName);
+            Assert.AreEqual(true, packet.ThisIsMe);
+            Assert.AreEqual(false, packet.PlayerAlive);
         }
     }
 }

@@ -1,13 +1,7 @@
-﻿using Infiniminer;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Plexiglass.Networking;
 using Plexiglass.Networking.Handlers;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PlexiglassTests.Packets
 {
@@ -18,7 +12,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Registration")]
         public void PacketResourceUpdate_RegisteringPacket_Registers()
         {
-            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT, null);
+            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT);
             packetRegistry.RegisterPacket<PacketResourceUpdate, PacketResourceUpdateHandler>();
         }
 
@@ -26,15 +20,17 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Serialization")]
         public void PacketResourceUpdate_Serializing_Successful()
         {
-            var packet = new PacketResourceUpdate();
-            packet.newOre =             0xDEADBEEF;
-            packet.newCash =            0xC0FFFFEE;
-            packet.newWeight =          0xBAADFEED;
-            packet.newOreMax =          0x0DDBA112;
-            packet.newWeightMax =       0xCAFEBABE;
-            packet.newOreTeam =         0xBAADBEEF;
-            packet.newTeamRedCash =     0x5CAFF01D;
-            packet.newTeamBlueCash =    0xF007BA11;
+            var packet = new PacketResourceUpdate
+            {
+                NewOre = 0xDEADBEEF,
+                NewCash = 0xC0FFFFEE,
+                NewWeight = 0xBAADFEED,
+                NewOreMax = 0x0DDBA112,
+                NewWeightMax = 0xCAFEBABE,
+                NewOreTeam = 0xBAADBEEF,
+                NewTeamRedCash = 0x5CAFF01D,
+                NewTeamBlueCash = 0xF007BA11
+            };
 
             var data = packet.Serialize();
             var comp = new byte[] { 0xEF, 0xBE, 0xAD, 0xDE,
@@ -48,7 +44,7 @@ namespace PlexiglassTests.Packets
 
             Assert.AreEqual(comp.Length, data.Length, "Serialized data was not expected length!");
 
-            for (int i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Length; i++)
             {
                 Assert.AreEqual(comp[i], data[i]);
             }
@@ -71,14 +67,14 @@ namespace PlexiglassTests.Packets
 
             packet.Deserialize(comp);
 
-            Assert.AreEqual((uint)0xDEADBEEF, packet.newOre);
-            Assert.AreEqual((uint)0xC0FFFFEE, packet.newCash);
-            Assert.AreEqual((uint)0xBAADFEED, packet.newWeight);
-            Assert.AreEqual((uint)0x0DDBA112, packet.newOreMax);
-            Assert.AreEqual((uint)0xCAFEBABE, packet.newWeightMax);
-            Assert.AreEqual((uint)0xBAADBEEF, packet.newOreTeam);
-            Assert.AreEqual((uint)0x5CAFF01D, packet.newTeamRedCash);
-            Assert.AreEqual((uint)0xF007BA11, packet.newTeamBlueCash);
+            Assert.AreEqual(0xDEADBEEF, packet.NewOre);
+            Assert.AreEqual(0xC0FFFFEE, packet.NewCash);
+            Assert.AreEqual(0xBAADFEED, packet.NewWeight);
+            Assert.AreEqual((uint)0x0DDBA112, packet.NewOreMax);
+            Assert.AreEqual(0xCAFEBABE, packet.NewWeightMax);
+            Assert.AreEqual(0xBAADBEEF, packet.NewOreTeam);
+            Assert.AreEqual((uint)0x5CAFF01D, packet.NewTeamRedCash);
+            Assert.AreEqual(0xF007BA11, packet.NewTeamBlueCash);
         }
     }
 }

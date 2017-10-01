@@ -3,10 +3,6 @@ using Microsoft.Xna.Framework;
 using Plexiglass.Networking;
 using Plexiglass.Networking.Handlers;
 using Plexiglass.Networking.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PlexiglassTests.Packets
 {
@@ -17,7 +13,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Registration")]
         public void PacketTriggerExplosionTest_RegisteringPacket_Registers()
         {
-            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT, null, null);
+            var packetRegistry = new PlexiglassPacketRegistry(PacketDirectionality.SERVER_TO_CLIENT);
             packetRegistry.RegisterPacket<PacketTriggerExplosion, PacketTriggerExplosionHandler>();
         }
 
@@ -25,8 +21,7 @@ namespace PlexiglassTests.Packets
         [TestCategory("Packet Serialization")]
         public void PacketTriggerExplosionTest_Serializing_Successful()
         {
-            var packet = new PacketTriggerExplosion();
-            packet.blockPos = new Vector3(1.2f, 3.4f, 5.6f);
+            var packet = new PacketTriggerExplosion {BlockPos = new Vector3(1.2f, 3.4f, 5.6f)};
 
             var data = packet.Serialize();
             var comp = new byte[] { 0x9a,
@@ -44,7 +39,7 @@ namespace PlexiglassTests.Packets
 
             Assert.AreEqual(comp.Length, data.Length, "Serialized data was not expected length!");
 
-            for(int i =0;i < data.Length;i++)
+            for(var i =0;i < data.Length;i++)
             {
                 Assert.AreEqual(comp[i], data[i]);
             }
@@ -71,7 +66,7 @@ namespace PlexiglassTests.Packets
 
             packet.Deserialize(comp);
 
-            Assert.AreEqual(packet.blockPos, new Vector3(1.2f, 3.4f, 5.6f));
+            Assert.AreEqual(packet.BlockPos, new Vector3(1.2f, 3.4f, 5.6f));
         }
     }
 }

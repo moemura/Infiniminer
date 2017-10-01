@@ -1,38 +1,35 @@
 ﻿using Infiniminer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Plexiglass.Networking.Packets
 {
     public class PacketBlockSet : IPacket
     {
-        public uint x, y, z;
-        public uint blockType;
+        public uint X, Y, Z;
+        public uint BlockType;
 
         public const int PACKET_SIZE = 16;
 
         public PacketBlockSet()
         {
-            x = y = z = 0;
-            blockType = 0;
+            X = Y = Z = 0;
+            BlockType = 0;
         }
 
         public PacketBlockSet(uint x = 0, uint y = 0, uint z = 0, uint blockType = 0)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.blockType = blockType;
+            X = x;
+            Y = y;
+            Z = z;
+            BlockType = blockType;
         }
 
         public void Deserialize(byte[] data)
         {
-            x = BitConverter.ToUInt32(data, 0);
-            y = BitConverter.ToUInt32(data, 4);
-            z = BitConverter.ToUInt32(data, 8);
-            blockType = BitConverter.ToUInt32(data, 12);
+            X = BitConverter.ToUInt32(data, 0);
+            Y = BitConverter.ToUInt32(data, 4);
+            Z = BitConverter.ToUInt32(data, 8);
+            BlockType = BitConverter.ToUInt32(data, 12);
         }
 
         public PacketDirectionality GetDirectionality()
@@ -40,7 +37,7 @@ namespace Plexiglass.Networking.Packets
             return PacketDirectionality.SERVER_TO_CLIENT;
         }
 
-        public uint GetPacketID()
+        public uint GetPacketId()
         {
             return (uint)InfiniminerMessage.BlockSet;
         }
@@ -48,10 +45,10 @@ namespace Plexiglass.Networking.Packets
         public byte[] Serialize()
         {
             byte[] data = new byte[PACKET_SIZE];
-            BitConverter.GetBytes(x).CopyTo(data, 0);
-            BitConverter.GetBytes(y).CopyTo(data, 4);
-            BitConverter.GetBytes(z).CopyTo(data, 8);
-            BitConverter.GetBytes(blockType).CopyTo(data, 12);
+            BitConverter.GetBytes(X).CopyTo(data, 0);
+            BitConverter.GetBytes(Y).CopyTo(data, 4);
+            BitConverter.GetBytes(Z).CopyTo(data, 8);
+            BitConverter.GetBytes(BlockType).CopyTo(data, 12);
             return data;
         }
     }

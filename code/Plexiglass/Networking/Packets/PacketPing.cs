@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Plexiglass.Networking.Packets
+﻿namespace Plexiglass.Networking.Packets
 {
     public class PacketPing : IPacket
     {
-        public static uint PACKET_ID = 0xFFFFFF;
+        public static uint PacketId = 0xFFFFFF;
 
         private uint pingValue;
 
@@ -26,14 +21,14 @@ namespace Plexiglass.Networking.Packets
             pingValue = (uint)((data[0] << 16) + (data[1] << 8) + data[2]);
         }
 
-        public uint GetPacketID()
+        public uint GetPacketId()
         {
-            return PACKET_ID;
+            return PacketId;
         }
 
         public byte[] Serialize()
         {
-            byte[] data = new byte[3] { (byte)(pingValue >> 16 & 0xFF), (byte)(pingValue >> 8 & 0xFF), (byte)(pingValue & 0xFF) };
+            byte[] data = { (byte)(pingValue >> 16 & 0xFF), (byte)(pingValue >> 8 & 0xFF), (byte)(pingValue & 0xFF) };
             return data;
         }
 
