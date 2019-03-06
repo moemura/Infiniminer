@@ -19,3 +19,8 @@ As Zach no longer has an offical repository for the game, this is where you'll p
 
 Just go to our [issues](https://github.com/CalmBit/infiniminer/issues) page!
 
+XNA Setup
+------
+
+http://flatredball.com/visual-studio-2017-xna-setup/
+
